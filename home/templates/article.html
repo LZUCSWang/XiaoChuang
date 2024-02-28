@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.min.js"></script>
+    <style>
+      .pdf-container {
+          text-align: center;
+          width: 100%;
+          {% comment %} overflow-x: hidden; /* 防止横向滚动 */ {% endcomment %}
+      }
+      .pdf-page-canvas {
+          margin-bottom: 10px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 添加一些阴影效果 */
+          max-width: 100%; /* 确保Canvas不超出屏幕宽度 */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pdf-container" class="pdf-container"></div>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.worker.min.js';
+          {% comment %} const url = '/static/chenying.pdf'; // 指定PDF文件路径 {% endcomment %}
+          const url = "{{ file|safe }}"; // 指定PDF文件路径
+          console.log(url);
+          try {
+              const pdfDoc = await pdfjsLib.getDocument(url).promise;
+              const container = document.getElementById('pdf-container');
+
+              for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                  const page = await pdfDoc.getPage(pageNum);
+                  // 增加缩放比例以提高清晰度
+                  const scale = 5; // 提高scale值以提高清晰度，原来是根据屏幕宽度动态计算的
+                  const viewport = page.getViewport({ scale: scale });
+                  const canvas = document.createElement('canvas');
+                  const context = canvas.getContext('2d');
+
+                  canvas.height = viewport.height;
+                  canvas.width = viewport.width;
+                  canvas.style.height = `${viewport.height / scale}px`; // 调整CSS尺寸以适配屏幕显示
+                  canvas.style.width = `${viewport.width / scale}px`; // 保持视觉尺寸不变
+
+                  const renderContext = {
+                      canvasContext: context,
+                      viewport: viewport
+                  };
+
+                  await page.render(renderContext).promise;
+                  container.appendChild(canvas);
+              }
+          } catch (error) {
+              console.error('Error loading or rendering PDF: ', error);
+          }
+      });
+    </script>
+  </body>
+</html>

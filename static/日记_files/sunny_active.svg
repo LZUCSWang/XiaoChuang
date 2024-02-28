@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>weather / sunny_active</title>
+    <g id="weather-/-sunny_active" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval-Copy" stroke="#FF9500" fill="#FFCC00" cx="15" cy="15" r="9"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(15.000000, 27.000000) rotate(180.000000) translate(-15.000000, -27.000000) " cx="15" cy="27" r="1"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(6.514719, 23.485281) rotate(225.000000) translate(-6.514719, -23.485281) " cx="6.51471863" cy="23.4852814" r="1"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(3.000000, 15.000000) rotate(270.000000) translate(-3.000000, -15.000000) " cx="3" cy="15" r="1"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(6.514719, 6.514719) rotate(315.000000) translate(-6.514719, -6.514719) " cx="6.51471863" cy="6.51471863" r="1"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(15.000000, 3.000000) rotate(360.000000) translate(-15.000000, -3.000000) " cx="15" cy="3" r="1"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(23.485281, 6.514719) rotate(405.000000) translate(-23.485281, -6.514719) " cx="23.4852814" cy="6.51471863" r="1"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(27.000000, 15.000000) rotate(450.000000) translate(-27.000000, -15.000000) " cx="27" cy="15" r="1"></circle>
+        <circle id="Oval" fill="#FF9500" transform="translate(23.485281, 23.485281) rotate(495.000000) translate(-23.485281, -23.485281) " cx="23.4852814" cy="23.4852814" r="1"></circle>
+    </g>
+</svg>

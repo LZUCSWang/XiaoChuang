@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #eff1f3;
+        color: #333;
+      }
+      .explore-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+      .post {
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease-in-out;
+      }
+      .post:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+      .author {
+        font-weight: 500;
+        color: #0079d3;
+      }
+      .post-time {
+        font-size: 0.85em;
+        color: #888;
+        margin-bottom: 10px;
+      }
+      .content {
+        margin-top: 10px;
+        line-height: 1.6;
+      }
+      .replies {
+        margin-top: 20px;
+        padding-left: 20px;
+      }
+      /* 新样式 */
+      .original-post {
+        padding: 0;
+        margin-bottom: 20px;
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+      }
+      .original-post .content {
+        margin-left: 20px;
+      }
+      .reply-button {
+        cursor: pointer;
+        padding: 5px 10px;
+        background-color: #0079d3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-left: 10px;
+      }
+
+      .reply-form {
+        display: none;
+        margin-top: 10px;
+      }
+
+      .reply-form input[type="text"] {
+        width: calc(100% - 110px);
+        padding: 5px;
+        margin-right: 5px;
+      }
+
+      .reply-form button {
+        padding: 5px 10px;
+        background-color: #0079d3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="explore-container">
+      <!-- 主内容区域 -->
+      <!-- 渲染楼主的内容 -->
+      <div class="original-post">
+        <div class="author">{{ original_post.author }}</div>
+        <div class="post-time">{{ original_post.post_time }}</div>
+        <div class="content">{{ original_post.content }}</div>
+        <button class="reply-button">Reply</button>
+        <div class="reply-form">
+          <input type="text" placeholder="Enter your reply here..." />
+          <button type="submit">Submit</button>
+        </div>
+      </div>
+      <!-- 渲染回复 -->
+      {% for reply in replies %}
+      <div class="post reply">
+        <div class="author">{{ reply.author }}</div>
+        <div class="post-time">{{ reply.post_time }}</div>
+        <div class="content">{{ reply.content }}</div>
+        <button class="reply-button">Reply</button>
+        <div class="reply-form">
+          <input type="text" placeholder="Enter your reply here..." />
+          <button type="submit">Submit</button>
+        </div>
+        <!-- 检查回复的回复 -->
+        {% if reply.replies %}
+        <div class="replies">
+          {% for sub_reply in reply.replies %}
+          <div class="post reply" style="margin-left: 40px">
+            <div class="author">{{ sub_reply.author }}</div>
+            <div class="post-time">{{ sub_reply.post_time }}</div>
+            <div class="content">{{ sub_reply.content }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var replyButtons = document.querySelectorAll(".reply-button");
+        replyButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            var form = this.nextElementSibling;
+            if (form.style.display === "none" || form.style.display === "") {
+              form.style.display = "block";
+            } else {
+              form.style.display = "none";
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

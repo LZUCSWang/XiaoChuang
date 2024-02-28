@@ -1,0 +1,14 @@
+<!-- _post.html -->
+<div class="post" style="margin-left: {{ margin|default:"0" }}px; border-radius: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); background-color: #ffffff; padding: 20px; margin-bottom: 20px;">
+    <div class="author">{{ post.author }}</div>
+    <div class="post-time">{{ post.post_time }}</div>
+    <div class="content">{{ post.content }}</div>
+   
+    {% if post.replies %}
+        <div class="replies">
+            {% for reply in post.replies %}
+                {% include "_post.html" with post=reply margin=margin|add:20 %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

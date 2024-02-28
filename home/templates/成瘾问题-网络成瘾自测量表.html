@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>调查问卷</title>
+    <link href="/static/survey.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="survey-container">
+      <h2>调查问卷</h2>
+      <!-- 问题1 -->
+      <div class="question">
+        <p>1.你是否对网络过于关注(如下网后还想着它)?</p>
+        <label>
+          <input type="radio" name="q1" value="1" required /> 是
+        </label>
+        <label> <input type="radio" name="q1" value="0" /> 否 </label>
+      </div>
+      <!-- 问题2 -->
+      <div class="question">
+        <p>2.你是否感觉需要不断增加上网时间才能感到满足?</p>
+        <label>
+          <input type="radio" name="q2" value="1" required /> 是
+        </label>
+        <label> <input type="radio" name="q2" value="0" /> 否 </label>
+      </div>
+      <button type="submit" class="submit-button" onclick="calculateScore()">
+        提交问卷
+      </button>
+    </div>
+    <!-- 模态弹窗 -->
+    <div id="scoreModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <p id="scoreText"></p>
+      </div>
+    </div>
+
+    <script>
+      function calculateScore() {
+        const questions = document.querySelectorAll(".question");
+        let score = 0;
+        questions.forEach((question) => {
+          const selectedOption = question.querySelector(
+            'input[type="radio"]:checked'
+          );
+          if (selectedOption) {
+            const value = parseInt(selectedOption.value);
+            if (!isNaN(value)) {
+              score += value; // 将选中选项的值加到总分上
+            }
+          }
+        });
+        // 显示模态弹窗和得分
+        document.getElementById("scoreText").innerText = `您的得分是：${score}`;
+        document.getElementById("scoreModal").style.display = "block";
+      }
+
+      // 关闭模态弹窗
+      const closeButton = document.querySelector(".close-button");
+      closeButton.addEventListener("click", function () {
+        document.getElementById("scoreModal").style.display = "none";
+      });
+
+      // 点击模态弹窗外部也可以关闭弹窗
+      window.onclick = function (event) {
+        const modal = document.getElementById("scoreModal");
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+  </body>
+</html>

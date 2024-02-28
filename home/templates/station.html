@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端网站示例</title>
+    {% comment %} // TODO: 将station内的样式修改成主页的样式 {% endcomment %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            overflow-y: scroll; /* 添加右侧滑块 */
+            padding-bottom: 60px; /* 底部栏高度，避免内容被底部栏遮挡 */
+        }
+  
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 15px; /* 圆角效果 */
+        }
+  
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            {% comment %} box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1); {% endcomment %}
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2); /* 加重阴影 */
+            z-index: 1000; /* 设置z-index确保底部栏永远处于最上层 */
+            height: 70px; /* 设置底部栏的高度 */
+            border-radius: 15px; /* 圆角效果 */
+  
+        }
+  
+        .bottom-bar-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            color: #666;
+            text-decoration: none;
+            position: relative; /* 添加相对定位 */
+        }
+  
+        .bottom-bar-item.active {
+            color: #007bff;
+        }
+  
+        .bottom-bar-item .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+  
+        .bottom-bar-item.active::after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px; /* 横条的高度 */
+            background-color: #007bff; /* 横条的颜色 */
+        }
+  
+        .content-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            background-color: #fff;
+            padding: 20px; /* 增大内边距 */
+            {% comment %} box-shadow: 0 2px 4px rgba(0,0,0,0.1); {% endcomment %}
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 加重阴影 */
+  
+            cursor: pointer; /* 新增样式，使其可点击 */
+            height: 100px; /* 增大每个项目的高度 */
+            border-radius: 10px; /* 圆角效果 */
+  
+        }
+        
+  
+        .content-item img {
+            width: 80px; /* 调整图片大小 */
+            height: 80px; /* 调整图片大小 */
+            margin-right: 20px; /* 调整间距 */
+        }
+  
+        .content-item .title {
+            font-size: 18px; /* 调整字体大小 */
+            color: #333;
+        }
+  
+        .article-page, .diary-page, .survey-page, .music-page, .suggestion-page {
+            display: none; /* 默认不显示 */
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+  
+        .article-page img, .diary-page img, .survey-page img, .music-page img, .suggestion-page img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+  
+        .article-page .text, .diary-page .text, .survey-page .text, .music-page .text, .suggestion-page .text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 网站内容 -->
+        <div id="article-content" class="content">
+            {% for ke_pu in ke_pus %}
+            <div
+              class="content-item"
+              data-id="{{ ke_pu.id }}"
+              data-type="科普"
+              data-name="{{ke_pu.name}}"            >
+              <img src="{{ ke_pu.image }}" />
+              <div class="title">{{ ke_pu.name }}</div>
+            </div>
+            {% endfor %}
+          </div>
+          <div id="survey-content" class="content">
+            {% for wen_juan in wen_juans %}
+            <div
+              class="content-item"
+              data-id="{{ wen_juan.id }}"
+              data-type="问卷"
+              data-name="{{wen_juan.name}}"            
+            >
+              <img src="{{ wen_juan.image }}" />
+              <div class="title">{{ wen_juan.name }}</div>
+            </div>
+            {% endfor %}
+          </div>
+          <div id="article2-content" class="content">
+            {% for fang_an in fang_ans %}
+            <div
+              class="content-item"
+              data-id="{{ fang_an.id }}"
+              data-type="方案"
+              data-name="{{fang_an.name}}"
+            >
+              <img src="{{ fang_an.image }}" />
+              <div class="title">{{ fang_an.name }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        {% comment %} <div id="article-content" class="content">
+            <!-- 科普项目 -->
+            <form method="post" action="{% url 'show_article' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="image1.jpg" alt="科普1">
+                <div class="title">科普1标题</div>
+                <input type="hidden" name="article_id" value="article1">
+            </form>
+            <form method="post" action="{% url 'show_article' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="image2.jpg" alt="科普2">
+                <div class="title">科普2标题</div>
+                <input type="hidden" name="article_id" value="article2">
+            </form>
+            <form method="post" action="{% url 'show_article' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="image3.jpg" alt="科普3">
+                <div class="title">科普3标题</div>
+                <input type="hidden" name="article_id" value="article3">
+            </form>
+        </div> {% endcomment %}
+        {% comment %} <div id="survey-content" class="content">
+            <!-- 量表项目 -->
+            <form method="post" action="{% url 'show_survey' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="survey1.jpg" alt="量表1">
+                <div class="title">量表1标题</div>
+                <input type="hidden" name="survey_id" value="survey1">
+            </form>
+            <form method="post" action="{% url 'show_survey' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="survey2.jpg" alt="量表2">
+                <div class="title">量表2标题</div>
+                <input type="hidden" name="survey_id" value="survey2">
+            </form>
+            <form method="post" action="{% url 'show_survey' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="survey3.jpg" alt="量表3">
+                <div class="title">量表3标题</div>
+                <input type="hidden" name="survey_id" value="survey3">
+            </form>
+        </div>
+        <div id="article2-content" class="content">
+            <!-- 方案项目 -->
+            <form method="post" action="{% url 'show_article' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="article21.jpg" alt="方案1">
+                <div class="title">方案1标题</div>
+                <input type="hidden" name="article2_id" value="article21">
+            </form>
+            <form method="post" action="{% url 'show_article' %}" class="content-item" onclick="this.submit()">
+                {% csrf_token %}
+                <img src="article22.jpg" alt="方案2">
+                <div class="title">方案2标题</div>
+                <input type="hidden" name="article2_id" value="article22">
+            </form>
+        </div> {% endcomment %}
+    </div>
+
+    <!-- 底部栏目 -->
+    <div class="bottom-bar">
+        <a href="#" class="bottom-bar-item" onclick="toggleContent('article', this)">
+            <div class="icon">Pop</div>
+            科普
+        </a>
+        <a href="#" class="bottom-bar-item" onclick="toggleContent('survey', this)">
+            <div class="icon">Sca</div>
+            量表
+        </a>
+        <a href="#" class="bottom-bar-item" onclick="toggleContent('article2', this)">
+            <div class="icon">Pro</div>
+            方案
+    </div>
+
+    <script>
+        function toggleContent(contentId, element) {
+            // 隐藏所有内容
+            var contents = document.querySelectorAll('.content');
+            contents.forEach(function(content) {
+                content.style.display = 'none';
+            });
+
+            // 显示对应的内容
+            var activeContent = document.getElementById(contentId + '-content');
+            if (activeContent) {
+                activeContent.style.display = 'block';
+            }
+
+            // 更新激活状态
+            var bottomBarItems = document.querySelectorAll('.bottom-bar-item');
+            bottomBarItems.forEach(function(item) {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+    </script>
+    <script>
+        !(function () {
+            function n(n, e, t) {
+              return n.getAttribute(e) || t;
+            }
+          
+            function e(n) {
+              return document.getElementsByTagName(n);
+            }
+          
+            function t() {
+              var t = e("script"),
+                o = t.length,
+                i = t[o - 1];
+              return {
+                l: o,
+                z: n(i, "zIndex", -1),
+                o: n(i, "opacity", 0.5),
+                c: n(i, "color", "0,0,0"),
+                n: n(i, "count", 99),
+              };
+            }
+          
+            function o() {
+              (a = m.width =
+                window.innerWidth ||
+                document.documentElement.clientWidth ||
+                document.body.clientWidth),
+                (c = m.height =
+                  window.innerHeight ||
+                  document.documentElement.clientHeight ||
+                  document.body.clientHeight);
+            }
+          
+            function i() {
+              r.clearRect(0, 0, a, c);
+              var n, e, t, o, m, l;
+              s.forEach(function (i, x) {
+                for (
+                  i.x += i.xa,
+                    i.y += i.ya,
+                    i.xa *= i.x > a || i.x < 0 ? -1 : 1,
+                    i.ya *= i.y > c || i.y < 0 ? -1 : 1,
+                    r.fillRect(i.x - 0.5, i.y - 0.5, 1, 1),
+                    e = x + 1;
+                  e < u.length;
+                  e++
+                )
+                  (n = u[e]),
+                    null !== n.x &&
+                      null !== n.y &&
+                      ((o = i.x - n.x),
+                      (m = i.y - n.y),
+                      (l = o * o + m * m),
+                      l < n.max &&
+                        (n === y &&
+                          l >= n.max / 2 &&
+                          ((i.x -= 0.03 * o), (i.y -= 0.03 * m)),
+                        (t = (n.max - l) / n.max),
+                        r.beginPath(),
+                        (r.lineWidth = t / 2),
+                        (r.strokeStyle = "rgba(" + d.c + "," + (t + 0.2) + ")"),
+                        r.moveTo(i.x, i.y),
+                        r.lineTo(n.x, n.y),
+                        r.stroke()));
+              }),
+                x(i);
+            }
+          
+            var a,
+              c,
+              u,
+              m = document.createElement("canvas"),
+              d = t(),
+              l = "c_n" + d.l,
+              r = m.getContext("2d"),
+              x =
+                window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function (n) {
+                  window.setTimeout(n, 1e3 / 45);
+                },
+              w = Math.random,
+              y = { x: null, y: null, max: 2e4 };
+            (m.id = l),
+              (m.style.cssText =
+                "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o),
+              e("body")[0].appendChild(m),
+              o(),
+              (window.onresize = o),
+              (window.onmousemove = function (n) {
+                (n = n || window.event), (y.x = n.clientX), (y.y = n.clientY);
+              }),
+              (window.onmouseout = function () {
+                (y.x = null), (y.y = null);
+              });
+            for (var s = [], f = 0; d.n > f; f++) {
+              var h = w() * a,
+                g = w() * c,
+                v = 2 * w() - 1,
+                p = 2 * w() - 1;
+              s.push({ x: h, y: g, xa: v, ya: p, max: 6e3 });
+            }
+            (u = s.concat([y])),
+              setTimeout(function () {
+                i();
+              }, 100);
+          })();
+          
+          
+          </script>
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+      $(document).ready(function () {
+        // 给每个内容项添加点击事件监听
+        $(".content-item").click(function () {
+          const data_type = $(this).data("type");
+          const data_name = $(this).data("name");
+          console.log(data_type, data_name);
+          console.log("clicked")
+          // 构建要发送的数据
+          const data = {
+            type: data_type,
+            name: data_name,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          };
+      
+          // 发送 Ajax 请求
+          $.ajax({
+            type: "POST",
+            url: '{% url "show_station" %}', // 替换成你的 Django 视图 URL
+            data: data,
+            success: function (response) {
+              // 处理成功响应
+              console.log(response);
+              // 你可以在这里根据响应更新页面内容或跳转
+              window.location.href = response.redirect_url;
+            },
+            error: function (xhr, status, error) {
+              // 处理错误
+              console.error(error);
+            },
+          });
+        });
+      });
+    </script>
+</body>
+</html>
+
