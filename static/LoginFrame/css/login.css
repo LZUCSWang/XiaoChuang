@@ -1,13 +1,13 @@
 body {
     /* background: url("../img/12345.jpg") center; */
-    background: url("https://typora-zpc.oss-cn-beijing.aliyuncs.com/AFE1CD17098E1CBC0E3F65FAB9DD0EFD.jpg") center;
-    background-size: 120% auto;
+    background: url("login.png") center;
+    background-size:  auto;
     background-repeat: no-repeat;
 }
 
 #login-box {
-    width: 30%;
-    height: auto;
+    width: 70%;
+    height: 80%;
     margin: 0 auto;
     margin-top: 15%;
     text-align: center;
@@ -35,7 +35,7 @@ body {
 }
 
 #login-box .form .item input[placeholder] {
-    color: white;
+    color: rgb(3, 3, 3);
 }
 
 #login-box .form .item i {

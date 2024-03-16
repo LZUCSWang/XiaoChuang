@@ -10,7 +10,7 @@
 .survey-container h2 {
   text-align: center;
   color: #333;
-  font-size: 84px;
+  font-size: 30px;
 }
 
 .question {
@@ -18,19 +18,19 @@
 }
 
 .question p {
-  font-size: 66px;
+  font-size: 15px;
   color: #333;
 }
 
 .question label {
   display: block;
   margin-bottom: 15px;
-  font-size: 66px;
+  font-size: 15px;
 }
 
 .question input[type="radio"] {
-  width: 66px;
-  height: 66px;
+  width: 20px;
+  height: 20px;
   vertical-align: middle;
 }
 
@@ -41,7 +41,7 @@
   border: none;
   border-radius: 15px;
   cursor: pointer;
-  font-size: 66px;
+  font-size: 33px;
 }
 /* 模态弹窗样式 */
 .modal {
@@ -77,4 +77,10 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+.rounded-box {
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
 }

@@ -21,27 +21,55 @@ idx = [
     "自我认知障碍",
 ]
 file = ""
-from PY import (
-    ftoken2account,
-    upload_data,
-    get_dataset,
-    get_datasets,
-    creat_dataset,
-    delete_dataset,
-    rename_dataset,
-    delete_data,
-)
-from PY import login as py_login
+# from PY import (
+#     ftoken2account,
+#     upload_data,
+#     get_dataset,
+#     get_datasets,
+#     creat_dataset,
+#     delete_dataset,
+#     rename_dataset,
+#     delete_data,
+# )
+# from PY import login as py_login
 
 stations = [
-    {"id": 1, "name": "成瘾问题", "image": "/static/elena.jpg"},
-    {"id": 2, "name": "焦虑心理", "image": "/static/elena.jpg"},
-    {"id": 3, "name": "恋爱相关", "image": "/static/elena.jpg"},
-    {"id": 4, "name": "强迫症", "image": "/static/elena.jpg"},
-    {"id": 5, "name": "适应障碍", "image": "/static/elena.jpg"},
-    {"id": 6, "name": "睡眠障碍", "image": "/static/elena.jpg"},
-    {"id": 7, "name": "抑郁心理", "image": "/static/elena.jpg"},
-    {"id": 8, "name": "自我认知障碍", "image": "/static/elena.jpg"},
+    {
+        "id": 1,
+        "name": "成瘾问题",
+        "image": "/static/科普/成瘾问题/成瘾问题科普文章.png",
+    },
+    {
+        "id": 2,
+        "name": "焦虑心理",
+        "image": "/static/方案/焦虑心理/面对焦虑，我该怎么办？.png",
+    },
+    {
+        "id": 3,
+        "name": "恋爱相关",
+        "image": "/static/方案/恋爱相关/大学生的恋爱心理矛盾及解决.png",
+    },
+    {"id": 4, "name": "强迫症", "image": "/static/科普/强迫症/什么是强迫症？.png"},
+    {
+        "id": 5,
+        "name": "适应障碍",
+        "image": "/static/科普/适应障碍/【专家说】人生就是一场适应的过程，带你了解“适应障碍”.png",
+    },
+    {
+        "id": 6,
+        "name": "睡眠障碍",
+        "image": "/static/科普/睡眠障碍/睡眠障碍科普文章.png",
+    },
+    {
+        "id": 7,
+        "name": "抑郁心理",
+        "image": "/static/科普/抑郁心理/关于抑郁症，这些知识你一定要知道！.png",
+    },
+    {
+        "id": 8,
+        "name": "自我认知障碍",
+        "image": "/static/方案/自我认知障碍/自卑心理解决方案.png",
+    },
 ]
 diaries = []
 musics = []
@@ -51,8 +79,24 @@ content_id = 0
 # Create your views here.
 global_token = ""
 global_dataset_id = ""
-
+global_username = ""
 import sqlite3
+
+
+def login1(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        global global_username
+        global_username = username
+        # user = auth.authenticate(username=username, password=password)
+        # if user is not None and user.is_active:
+        #     auth.login(request, user)
+        return redirect(reverse("login"))
+        # else:
+        #     messages.add_message(request, messages.ERROR, "用户名或密码错误")
+        #     return render(request, "login1.html")
+    return render(request, "login1.html")
 
 
 def get_replies(c, parent_id):
@@ -77,6 +121,7 @@ def get_replies(c, parent_id):
                 "content": reply[2],
                 "author": reply[3],
                 "replies": nested_replies,
+                "parent_id": parent_id,
             }
         )
 
@@ -86,33 +131,28 @@ def get_replies(c, parent_id):
 def show_diary(request):
     if request.method == "POST":
         try:
+            if request.POST.get("delete")=="yes":
+                conn = sqlite3.connect("db.sqlite3")
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM home_diary WHERE id = ?", (content_id,))
+                conn.commit()
+                cursor.close()
+                conn.close()
+                return JsonResponse(
+                    {"status": "success", "message": "Diary entry deleted successfully."}
+                )
             # 直接从POST数据中解析，无需json.loads
             title = request.POST.get("title")
             content = request.POST.get("content")
             weather = request.POST.get("weather")
             background = request.POST.get("category")
-            print("POST", title, content, weather, background)
             # 连接到数据库
             conn = sqlite3.connect("db.sqlite3")
             cursor = conn.cursor()
-
-            # 检查是否存在具有给定标题的条目
-            cursor.execute("SELECT * FROM home_diary WHERE title = ?", (title,))
-            entry = cursor.fetchone()
-            print(entry)
-            if entry:
-                # 更新存在的条目
-                cursor.execute(
-                    "UPDATE home_diary SET content = ?, weather = ?, background = ? WHERE title = ?",
-                    (content, weather, background, title),
-                )
-                print("UPDATE home_diary SET content = ?, weather = ?, background = ? WHERE title = ?", (content, weather, background, title))
-            else:
-                # 创建新的条目
-                cursor.execute(
-                    "INSERT INTO home_diary (title, content, weather, background) VALUES (?, ?, ?, ?)",
-                    (title, content, weather, background),
-                )
+            cursor.execute(
+                "UPDATE home_diary SET content = ?, weather = ?, background = ? ,title = ? WHERE id = ?",
+                (content, weather, background, title, content_id),
+            )
 
             # 提交更改并关闭连接
             conn.commit()
@@ -126,10 +166,9 @@ def show_diary(request):
             return JsonResponse({"status": "error", "message": str(e)})
     for record in diaries:
         if record["id"] == int(content_id):
-            print(record)
+            print(diaries)
             return render(request, "diary.html", {"diary": record})
     return render(request, "diary.html")
-    # return render(request, "diary-test.html")
 
 
 from django.http import JsonResponse
@@ -139,14 +178,12 @@ def show_explore(request):
     global content_id
     conn = sqlite3.connect("db.sqlite3")
     c = conn.cursor()
-    print(123)
     original_content = c.execute(
         "SELECT * FROM home_explore WHERE id = ?", (content_id,)
     ).fetchone()
-    print(original_content)
     original_dict = dict(
         (k, original_content[i])
-        for i, k in enumerate(["id", "post_time", "content", "author"])
+        for i, k in enumerate(["id", "post_time", "content", "author", "parent_id"])
     )
     replies_dict = get_replies(c, content_id)
     return render(
@@ -158,13 +195,9 @@ def show_explore(request):
 
 def show_station(request):
     if request.method == "POST":
-        print("POST")
         global content_id
         content_type = request.POST.get("type")
         content_name = request.POST.get("name")
-        print("content_id", content_id)
-        print("content_type", content_type)
-        print("content_name", content_name)
 
         global file
         if content_type == "科普":
@@ -208,7 +241,6 @@ def show_station(request):
         (subcategory_name,),
     )
     items = cursor.fetchall()
-    print(items)
     # 关闭数据库连接
     cursor.close()
     conn.close()
@@ -222,7 +254,7 @@ def show_station(request):
                     "script": item[2],
                     "category": item[3],
                     "subcategory": item[4],
-                    "image": "/static/elena.jpg",
+                    "image": "/static/科普/" + item[4] + "/" + item[1] + ".png",
                 }
             )
         if item[3] == "问卷":
@@ -233,7 +265,7 @@ def show_station(request):
                     "script": item[2],
                     "category": item[3],
                     "subcategory": item[4],
-                    "image": "/static/elena.jpg",
+                    "image": "/static/问卷/" + item[4] + "/" + item[1] + ".png",
                 }
             )
         if item[3] == "方案":
@@ -244,13 +276,14 @@ def show_station(request):
                     "script": item[2],
                     "category": item[3],
                     "subcategory": item[4],
-                    "image": "/static/elena.jpg",
+                    "image": "/static/方案/" + item[4] + "/" + item[1] + ".png",
                 }
             )
     return render(
         request,
         "station.html",
         {
+            "typename": idx[int(content_id)],
             "station_id": station_id,
             "ke_pus": ke_pus,
             "wen_juans": wen_juans,
@@ -260,18 +293,17 @@ def show_station(request):
 
 
 from django.http import HttpResponse
-from pdf2image import convert_from_path
+
+# from pdf2image import convert_from_path
 import io
 
 
 def show_Hitokoto(request):
-    print("------------------------------")
     return render(request, "Hitokoto.html")
 
 
 def show_article(request):
     # return HttpResponse('article')
-    print(file)
     return render(request, "article.html", {"file": file})
     # return render(request, "成瘾问题科普文章(完成).mhtml")
     # views.py
@@ -286,42 +318,92 @@ def show_music(request):
     # musics[int(content_id) - 1]
     # 假设 musics 是您的数组，content_id 是要移动到开头的元素的索引（从 1 开始）
     content_id_int = int(content_id)  # 将字符串类型的索引转换为整数类型
-    if 1 <= content_id_int <= len(musics):
-        musics.insert(0, musics.pop(content_id_int - 1))
-
+    # if 1 <= content_id_int <= len(musics):
+    # musics.insert(0, musics.pop(content_id_int - 1))
+    for music in musics:
+        if music["id"] == content_id_int:
+            musics.insert(0, musics.pop(musics.index(music)))
+            return render(request, "music.html", {"music": musics})
     return render(request, "music.html", {"music": musics})
 
 
-def usr(request, token):
-    global global_token
-    global_token = token
-    return render(
-        request,
-        "usr.html",
-        {
-            "token": token,
-            "username": ftoken2account(token),
-            "datasets": get_datasets(token),
-        },
+def reply(request):
+    parent_id = request.POST.get("m_id")
+    content = request.POST.get("input_content")
+    conn = sqlite3.connect("db.sqlite3")
+    c = conn.cursor()
+    current_time = datetime.datetime.now()
+    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    print(content, global_username, parent_id, formatted_time)
+    c.execute(
+        "INSERT INTO home_explore (content, author, parent_id,post_time) VALUES (?, ?, ?,?)",
+        (content, global_username, parent_id, formatted_time),
     )
+    conn.commit()
+    conn.close()
+    return JsonResponse({"status": "success", "redirect_url": "/show_explore/"})
 
 
-def submit_survey(request):
-    return HttpResponse("submit_survey")
+# def usr(request, token):
+#     global global_token
+#     global_token = token
+#     return render(
+#         request,
+#         "usr.html",
+#         {
+#             "token": token,
+#             "username": ftoken2account(token),
+#             "datasets": get_datasets(token),
+#         },
+#     )
 
 
-def home(request):
-    global global_dataset_id
-    global global_token
-    if request.method == "POST":
-        dataset_id = request.POST.get("dataset_id")
-        global_dataset_id = dataset_id
-        dataset_name = get_datasets(global_token)[dataset_id]["name"]
-        # print(dataset_name)
-        return redirect(reverse("home"))
-    else:
-        dataset = json.dumps(get_dataset(global_token, global_dataset_id))
-        return render(request, "home.html", {"dataset": dataset})
+# def submit_survey(request):
+#     return HttpResponse("submit_survey")
+
+
+# def home(request):
+#     global global_dataset_id
+#     global global_token
+#     if request.method == "POST":
+#         dataset_id = request.POST.get("dataset_id")
+#         global_dataset_id = dataset_id
+#         dataset_name = get_datasets(global_token)[dataset_id]["name"]
+#         # print(dataset_name)
+#         return redirect(reverse("home"))
+#     else:
+#         dataset = json.dumps(get_dataset(global_token, global_dataset_id))
+#         return render(request, "home.html", {"dataset": dataset})
+
+import datetime
+
+
+def add_button(request):
+    input_content = request.POST.get("input_content")
+    input_type = request.POST.get("input_type")
+    # print(input_content, input_type)
+    if input_type == "diary":
+        conn = sqlite3.connect("db.sqlite3")
+        c = conn.cursor()
+        c.execute(
+            "INSERT INTO home_diary (title,background) VALUES (?,?)",
+            (input_content, "默认"),
+        )
+        conn.commit()
+        conn.close()
+    elif input_type == "explore":
+        conn = sqlite3.connect("db.sqlite3")
+        c = conn.cursor()
+        current_time = datetime.datetime.now()
+        formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+        c.execute(
+            "INSERT INTO home_explore (content,author,post_time) VALUES (?,?,?)",
+            (input_content, global_username, formatted_time),
+        )
+        conn.commit()
+        conn.close()
+    return JsonResponse({"status": "success", "redirect_url": "/login/"})
+    # return render(request, "add_button.html")
 
 
 def django_login(request):
@@ -335,7 +417,6 @@ def django_login(request):
         if content_type == "diary":
             return JsonResponse({"status": "success", "redirect_url": "/show_diary/"})
         if content_type == "music":
-            # print("music[id]", musics[int(content_id) - 1])
             return JsonResponse({"status": "success", "redirect_url": "/show_music/"})
         if content_type == "explore":
             return JsonResponse(
@@ -355,22 +436,20 @@ def django_login(request):
     diaries.clear()
     musics.clear()
     explores.clear()
-    c.execute("SELECT * FROM home_diary")
+    c.execute("SELECT id,title,weather,mood,background,content FROM home_diary")
     records = c.fetchall()
-    print(records)
     for i, record in enumerate(records):
         diaries.append(
             {
                 "id": record[0],
                 "title": record[1],
-                "content": record[2],
-                "weather": record[3],
-                "mood": record[4],
-                "background": record[5],
-                "image": "/static/elena.jpg",
+                "weather": record[2],
+                "mood": record[3],
+                "background": record[4],
+                "content": record[5],
+                "image": "/static/" + record[4] + ".jpg",
             }
         )
-
     c.execute("SELECT * FROM home_music")
     records = c.fetchall()
     for i, record in enumerate(records):
@@ -387,25 +466,22 @@ def django_login(request):
         )
 
     c.execute("SELECT * FROM home_explore")
-    # print(c.fetchall()[0][0])
     records = c.fetchall()
-    print(records)
     for record in records:
         if record[4] == None:
-            print(record)
             explores.append(
                 {
                     "id": record[0],
                     "time": record[1],
                     "name": record[2][:8],
-                    "image": "/static/elena.jpg",
+                    "image": "/static/question.jpg",
                 }
             )
-
     return render(
         request,
         "login.html",
         {
+            "username": global_username,
             "stations": stations,
             "diaries": diaries,
             "musics": musics,
@@ -414,261 +490,261 @@ def django_login(request):
     )
 
 
-# 参考（django）01 django实现前端上传图片到后端保存_django保存图片-CSDN博客.pdf
-def django_upload_data(request):
-    # 由前端指定的name获取到图片数据
-    global global_token
-    global global_dataset_id
-    img = request.FILES.get("img")
-    # 获取图片的全文件名
-    img_name = img.name
-    # 截取文件后缀和文件名
-    mobile = os.path.splitext(img_name)[0]
-    ext = os.path.splitext(img_name)[1]
-    # 重定义文件名
-    img_name = f"{mobile}{ext}"
-    # print(img_name)
-    upload_dir = os.path.join(os.getcwd(), "usr_upload")
-    if not os.path.exists(upload_dir):
-        os.makedirs(upload_dir)
-    img_path = os.path.join(upload_dir, img_name)
-    if not os.path.exists(img_path):
-        # return HttpResponse('File already exists')
-        # 写入文件
-        with open(img_path, "ab") as fp:
-            # 如果上传的图片非常大，就通过chunks()方法分割成多个片段来上传
-            for chunk in img.chunks():
-                fp.write(chunk)
-        # fp.write(img.read())
-    # 上传到AI库里
-    with open(img_path, "rb") as f:
-        data = f.read()
-    upload_data(global_token, global_dataset_id, [(img_name, data)])
-    # json2sqlite()+
-    return HttpResponseRedirect(reverse("home"))
+# # 参考（django）01 django实现前端上传图片到后端保存_django保存图片-CSDN博客.pdf
+# def django_upload_data(request):
+#     # 由前端指定的name获取到图片数据
+#     global global_token
+#     global global_dataset_id
+#     img = request.FILES.get("img")
+#     # 获取图片的全文件名
+#     img_name = img.name
+#     # 截取文件后缀和文件名
+#     mobile = os.path.splitext(img_name)[0]
+#     ext = os.path.splitext(img_name)[1]
+#     # 重定义文件名
+#     img_name = f"{mobile}{ext}"
+#     # print(img_name)
+#     upload_dir = os.path.join(os.getcwd(), "usr_upload")
+#     if not os.path.exists(upload_dir):
+#         os.makedirs(upload_dir)
+#     img_path = os.path.join(upload_dir, img_name)
+#     if not os.path.exists(img_path):
+#         # return HttpResponse('File already exists')
+#         # 写入文件
+#         with open(img_path, "ab") as fp:
+#             # 如果上传的图片非常大，就通过chunks()方法分割成多个片段来上传
+#             for chunk in img.chunks():
+#                 fp.write(chunk)
+#         # fp.write(img.read())
+#     # 上传到AI库里
+#     with open(img_path, "rb") as f:
+#         data = f.read()
+#     upload_data(global_token, global_dataset_id, [(img_name, data)])
+#     # json2sqlite()+
+#     return HttpResponseRedirect(reverse("home"))
 
 
-def django_delete_data(request):
-    global global_token
-    if request.method == "POST":
-        # 批量删除版本
-        data_id_seq = request.POST.get("delete_data_id")
-        data_id_list = data_id_seq.split(",")
-        for data_id in data_id_list:
-            if data_id == "" or delete_data(global_token, global_dataset_id, data_id):
-                continue
-            else:
-                HttpResponse("failue")
-        return redirect(reverse("home"))
-        # 单个删除版本
-        data_id = request.POST.get("delete_data_id")
-        if delete_data(global_token, global_dataset_id, data_id):
-            return redirect(reverse("home"))
-        else:
-            HttpResponse("failue")
-    pass
+# def django_delete_data(request):
+#     global global_token
+#     if request.method == "POST":
+#         # 批量删除版本
+#         data_id_seq = request.POST.get("delete_data_id")
+#         data_id_list = data_id_seq.split(",")
+#         for data_id in data_id_list:
+#             if data_id == "" or delete_data(global_token, global_dataset_id, data_id):
+#                 continue
+#             else:
+#                 HttpResponse("failue")
+#         return redirect(reverse("home"))
+#         # 单个删除版本
+#         data_id = request.POST.get("delete_data_id")
+#         if delete_data(global_token, global_dataset_id, data_id):
+#             return redirect(reverse("home"))
+#         else:
+#             HttpResponse("failue")
+#     pass
 
 
-def django_create_dataset(request):
-    if request.method == "POST":
-        # 获取提交的数据
-        global global_token
-        dataset_name = request.POST.get("create_dataset_name")
-        # print(token, dataset_name)
-        datasets = get_datasets(global_token)
-        dup = 0
-        for dataset_id, dataset_info in datasets.items():
-            if dataset_info["name"] == dataset_name:
-                dup = 1
-                break
-        # 在这里处理你的逻辑，比如保存数据到数据库等
-        if dup == 0:
-            dataset_id = creat_dataset(global_token, dataset_name)
-        # 返回一个简单的响应，你可以根据实际需求进行修改
-        return render(
-            request,
-            "usr.html",
-            {
-                "dup": dup,
-                "token": global_token,
-                "username": ftoken2account(global_token),
-                "datasets": get_datasets(global_token),
-            },
-        )
-    # 如果是 GET 请求，可以根据实际需求返回一个页面或其他响应
-    return HttpResponse("Invalid request method")
+# def django_create_dataset(request):
+#     if request.method == "POST":
+#         # 获取提交的数据
+#         global global_token
+#         dataset_name = request.POST.get("create_dataset_name")
+#         # print(token, dataset_name)
+#         datasets = get_datasets(global_token)
+#         dup = 0
+#         for dataset_id, dataset_info in datasets.items():
+#             if dataset_info["name"] == dataset_name:
+#                 dup = 1
+#                 break
+#         # 在这里处理你的逻辑，比如保存数据到数据库等
+#         if dup == 0:
+#             dataset_id = creat_dataset(global_token, dataset_name)
+#         # 返回一个简单的响应，你可以根据实际需求进行修改
+#         return render(
+#             request,
+#             "usr.html",
+#             {
+#                 "dup": dup,
+#                 "token": global_token,
+#                 "username": ftoken2account(global_token),
+#                 "datasets": get_datasets(global_token),
+#             },
+#         )
+#     # 如果是 GET 请求，可以根据实际需求返回一个页面或其他响应
+#     return HttpResponse("Invalid request method")
 
 
-def django_delete_dataset(request):
-    if request.method == "POST":
-        global global_token
-        account = ftoken2account(global_token)
-        dataset_name = request.POST.get("delete_dataset_name")
-        conn = sqlite3.connect("db.sqlite3")
-        c = conn.cursor()
-        c.execute(
-            "SELECT dataset_id FROM datasets WHERE dataset_name = ? AND account_id = (SELECT id FROM account WHERE username = ?)",
-            (
-                dataset_name,
-                account,
-            ),
-        )
-        try:
-            dataset_id = c.fetchone()[0]
-        except:
-            # 删除不存在的数据集
-            return render(
-                request,
-                "usr.html",
-                {
-                    "dup": 0,
-                    "del": 1,
-                    "token": global_token,
-                    "username": ftoken2account(global_token),
-                    "datasets": get_datasets(global_token),
-                },
-            )
-        conn.close()
-        print(dataset_id)
-        if delete_dataset(global_token, dataset_id):
-            return render(
-                request,
-                "usr.html",
-                {
-                    "dup": 0,
-                    "token": global_token,
-                    "username": ftoken2account(global_token),
-                    "datasets": get_datasets(global_token),
-                },
-            )
-        else:
-            # HttpResponse('failue')
-            # 删除失败
-            return render(
-                request,
-                "usr.html",
-                {
-                    "dup": 0,
-                    "del": 1,
-                    "token": global_token,
-                    "username": ftoken2account(global_token),
-                    "datasets": get_datasets(global_token),
-                },
-            )
-    return HttpResponse("Invalid request method")
+# def django_delete_dataset(request):
+#     if request.method == "POST":
+#         global global_token
+#         account = ftoken2account(global_token)
+#         dataset_name = request.POST.get("delete_dataset_name")
+#         conn = sqlite3.connect("db.sqlite3")
+#         c = conn.cursor()
+#         c.execute(
+#             "SELECT dataset_id FROM datasets WHERE dataset_name = ? AND account_id = (SELECT id FROM account WHERE username = ?)",
+#             (
+#                 dataset_name,
+#                 account,
+#             ),
+#         )
+#         try:
+#             dataset_id = c.fetchone()[0]
+#         except:
+#             # 删除不存在的数据集
+#             return render(
+#                 request,
+#                 "usr.html",
+#                 {
+#                     "dup": 0,
+#                     "del": 1,
+#                     "token": global_token,
+#                     "username": ftoken2account(global_token),
+#                     "datasets": get_datasets(global_token),
+#                 },
+#             )
+#         conn.close()
+#         print(dataset_id)
+#         if delete_dataset(global_token, dataset_id):
+#             return render(
+#                 request,
+#                 "usr.html",
+#                 {
+#                     "dup": 0,
+#                     "token": global_token,
+#                     "username": ftoken2account(global_token),
+#                     "datasets": get_datasets(global_token),
+#                 },
+#             )
+#         else:
+#             # HttpResponse('failue')
+#             # 删除失败
+#             return render(
+#                 request,
+#                 "usr.html",
+#                 {
+#                     "dup": 0,
+#                     "del": 1,
+#                     "token": global_token,
+#                     "username": ftoken2account(global_token),
+#                     "datasets": get_datasets(global_token),
+#                 },
+#             )
+#     return HttpResponse("Invalid request method")
 
 
-def django_rename_dataset(request):
-    global global_token
-    if request.method == "POST":
-        account = ftoken2account(global_token)
-        previous_dataset_name = request.POST.get("previous_dataset_name")
-        new_dataset_name = request.POST.get("new_dataset_name")
-        conn = sqlite3.connect("db.sqlite3")
-        c = conn.cursor()
-        c.execute(
-            "SELECT dataset_id FROM datasets WHERE dataset_name = ? AND account_id = (SELECT id FROM account WHERE username = ?)",
-            (
-                new_dataset_name,
-                account,
-            ),
-        )
-        if c.fetchone() != None:
-            # 新重命名的数据集已存在
-            return render(
-                request,
-                "usr.html",
-                {
-                    "dup": 0,
-                    "ren": 2,
-                    "token": global_token,
-                    "username": ftoken2account(global_token),
-                    "datasets": get_datasets(global_token),
-                },
-            )
-        c.execute(
-            "SELECT dataset_id FROM datasets WHERE dataset_name = ? AND account_id = (SELECT id FROM account WHERE username = ?)",
-            (
-                previous_dataset_name,
-                account,
-            ),
-        )
-        try:
-            dataset_id = c.fetchone()[0]
-        except:
-            # 原重命名的数据集不存在
-            return render(
-                request,
-                "usr.html",
-                {
-                    "dup": 0,
-                    "ren": 1,
-                    "token": global_token,
-                    "username": ftoken2account(global_token),
-                    "datasets": get_datasets(global_token),
-                },
-            )
-        conn.close()
-        if rename_dataset(global_token, dataset_id, new_dataset_name):
-            return render(
-                request,
-                "usr.html",
-                {
-                    "dup": 0,
-                    "ren": 0,
-                    "token": global_token,
-                    "username": ftoken2account(global_token),
-                    "datasets": get_datasets(global_token),
-                },
-            )
-        else:
-            # 重命名失败
-            return render(
-                request,
-                "usr.html",
-                {
-                    "dup": 0,
-                    "ren": 1,
-                    "token": global_token,
-                    "username": ftoken2account(global_token),
-                    "datasets": get_datasets(global_token),
-                },
-            )
-    return HttpResponse("Invalid request method")
+# def django_rename_dataset(request):
+#     global global_token
+#     if request.method == "POST":
+#         account = ftoken2account(global_token)
+#         previous_dataset_name = request.POST.get("previous_dataset_name")
+#         new_dataset_name = request.POST.get("new_dataset_name")
+#         conn = sqlite3.connect("db.sqlite3")
+#         c = conn.cursor()
+#         c.execute(
+#             "SELECT dataset_id FROM datasets WHERE dataset_name = ? AND account_id = (SELECT id FROM account WHERE username = ?)",
+#             (
+#                 new_dataset_name,
+#                 account,
+#             ),
+#         )
+#         if c.fetchone() != None:
+#             # 新重命名的数据集已存在
+#             return render(
+#                 request,
+#                 "usr.html",
+#                 {
+#                     "dup": 0,
+#                     "ren": 2,
+#                     "token": global_token,
+#                     "username": ftoken2account(global_token),
+#                     "datasets": get_datasets(global_token),
+#                 },
+#             )
+#         c.execute(
+#             "SELECT dataset_id FROM datasets WHERE dataset_name = ? AND account_id = (SELECT id FROM account WHERE username = ?)",
+#             (
+#                 previous_dataset_name,
+#                 account,
+#             ),
+#         )
+#         try:
+#             dataset_id = c.fetchone()[0]
+#         except:
+#             # 原重命名的数据集不存在
+#             return render(
+#                 request,
+#                 "usr.html",
+#                 {
+#                     "dup": 0,
+#                     "ren": 1,
+#                     "token": global_token,
+#                     "username": ftoken2account(global_token),
+#                     "datasets": get_datasets(global_token),
+#                 },
+#             )
+#         conn.close()
+#         if rename_dataset(global_token, dataset_id, new_dataset_name):
+#             return render(
+#                 request,
+#                 "usr.html",
+#                 {
+#                     "dup": 0,
+#                     "ren": 0,
+#                     "token": global_token,
+#                     "username": ftoken2account(global_token),
+#                     "datasets": get_datasets(global_token),
+#                 },
+#             )
+#         else:
+#             # 重命名失败
+#             return render(
+#                 request,
+#                 "usr.html",
+#                 {
+#                     "dup": 0,
+#                     "ren": 1,
+#                     "token": global_token,
+#                     "username": ftoken2account(global_token),
+#                     "datasets": get_datasets(global_token),
+#                 },
+#             )
+#     return HttpResponse("Invalid request method")
 
 
-def django_research_dataset(request):
-    if request.method == "POST":
-        global global_token
-        global global_dataset_id
-        dataset_name = request.POST.get("research_dataset_name")
-        dataset = {}
-        print(get_datasets(global_token))
-        for key, value in get_datasets(global_token).items():
-            print(value["name"], dataset_name)
-            if value["name"] == dataset_name:
-                dataset[key] = value
-                return render(
-                    request,
-                    "usr.html",
-                    {
-                        "rea": 0,
-                        "token": global_token,
-                        "username": ftoken2account(global_token),
-                        "datasets": dataset,
-                    },
-                )
-        # print(dataset_name)
+# def django_research_dataset(request):
+#     if request.method == "POST":
+#         global global_token
+#         global global_dataset_id
+#         dataset_name = request.POST.get("research_dataset_name")
+#         dataset = {}
+#         print(get_datasets(global_token))
+#         for key, value in get_datasets(global_token).items():
+#             print(value["name"], dataset_name)
+#             if value["name"] == dataset_name:
+#                 dataset[key] = value
+#                 return render(
+#                     request,
+#                     "usr.html",
+#                     {
+#                         "rea": 0,
+#                         "token": global_token,
+#                         "username": ftoken2account(global_token),
+#                         "datasets": dataset,
+#                     },
+#                 )
+#         # print(dataset_name)
 
-        dataset = get_datasets(global_token)
-        return render(
-            request,
-            "usr.html",
-            {
-                "rea": 1,
-                "token": global_token,
-                "username": ftoken2account(global_token),
-                "datasets": dataset,
-            },
-        )
-    return HttpResponse("Invalid request method")
+#         dataset = get_datasets(global_token)
+#         return render(
+#             request,
+#             "usr.html",
+#             {
+#                 "rea": 1,
+#                 "token": global_token,
+#                 "username": ftoken2account(global_token),
+#                 "datasets": dataset,
+#             },
+#         )
+#     return HttpResponse("Invalid request method")

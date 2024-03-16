@@ -22,23 +22,6 @@ class subcategory(models.Model):
     def __str__(self):
         return f"{self.category.name} - {self.name}"
 
-
-# class item(models.Model):
-#     subcategory = models.ForeignKey(
-#         subcategory, on_delete=models.CASCADE, related_name="items"
-#     )
-#     category = models.ForeignKey(
-#         category, on_delete=models.CASCADE, related_name="items"
-#     )
-#     name = models.CharField(max_length=100)  # 数据项的名称或标识
-#     description = models.TextField(blank=True)  # 数据项的详细描述
-#     # 根据需要，你可以添加更多字段来存储具体的数据项信息，例如价格、日期等
-
-#     def __str__(self):
-#         return (
-#             f"{self.subcategory.category.name} - {self.subcategory.name} - {self.name}"
-#         )
-
 from django.db import models
 
 
@@ -121,7 +104,7 @@ BACKGROUND_CHOICES = [
 
 class diary(models.Model):
     title = models.CharField(max_length=100)
-    content = models.TextField()
+    content = models.TextField(blank=True,null=True)
     weather = models.CharField(
         max_length=20, choices=WEATHER_CHOICES, blank=True, null=True
     )

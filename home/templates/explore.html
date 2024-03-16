@@ -4,13 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Explore</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
     <style>
       body {
-        font-family: "Roboto", sans-serif;
+        font-family: 'Roboto', sans-serif;
         background-color: #eff1f3;
         color: #333;
       }
@@ -68,18 +65,18 @@
         border-radius: 5px;
         margin-left: 10px;
       }
-
+      
       .reply-form {
         display: none;
         margin-top: 10px;
       }
-
-      .reply-form input[type="text"] {
+      
+      .reply-form input[type='text'] {
         width: calc(100% - 110px);
         padding: 5px;
         margin-right: 5px;
       }
-
+      
       .reply-form button {
         padding: 5px 10px;
         background-color: #0079d3;
@@ -90,6 +87,8 @@
     </style>
   </head>
   <body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <div class="explore-container">
       <!-- 主内容区域 -->
       <!-- 渲染楼主的内容 -->
@@ -97,52 +96,107 @@
         <div class="author">{{ original_post.author }}</div>
         <div class="post-time">{{ original_post.post_time }}</div>
         <div class="content">{{ original_post.content }}</div>
-        <button class="reply-button">Reply</button>
+        <button class="reply-button">回复</button>
         <div class="reply-form">
-          <input type="text" placeholder="Enter your reply here..." />
-          <button type="submit">Submit</button>
+          <input type="text" id="{{ original_post.id }}" p_id="{{ original_post.parent_id }}" placeholder="Enter your reply here..." />
+          <button type="submit" onclick="Submit({{ original_post.id }})" id="{{ original_post.id }}" p_id="{{ original_post.parent_id }}">提交</button>
+          
         </div>
       </div>
       <!-- 渲染回复 -->
       {% for reply in replies %}
-      <div class="post reply">
-        <div class="author">{{ reply.author }}</div>
-        <div class="post-time">{{ reply.post_time }}</div>
-        <div class="content">{{ reply.content }}</div>
-        <button class="reply-button">Reply</button>
-        <div class="reply-form">
-          <input type="text" placeholder="Enter your reply here..." />
-          <button type="submit">Submit</button>
-        </div>
-        <!-- 检查回复的回复 -->
-        {% if reply.replies %}
-        <div class="replies">
-          {% for sub_reply in reply.replies %}
-          <div class="post reply" style="margin-left: 40px">
-            <div class="author">{{ sub_reply.author }}</div>
-            <div class="post-time">{{ sub_reply.post_time }}</div>
-            <div class="content">{{ sub_reply.content }}</div>
+        <div class="post reply">
+          <div class="author">{{ reply.author }}</div>
+          <div class="post-time">{{ reply.post_time }}</div>
+          <div class="content">{{ reply.content }}</div>
+          <button class="reply-button">回复</button>
+          <div class="reply-form">
+            <input type="text" id="{{ reply.id }}" p_id="{{ reply.parent_id }}" placeholder="Enter your reply here..." />
+            <button type="submit" onclick="Submit({{ reply.id }})" id="{{ reply.id }}" p_id="{{ reply.parent_id }}">提交</button>
+            {% comment %} <script>
+              function Submit(id) {
+              
+                const data = {
+                  input_content: reply,
+                  m_id: id
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+                console.log(data)
+                // 发送 Ajax 请求
+                $.ajax({
+                  type: 'POST',
+                  url: '{% url "reply" %}', // 替换成你的 Django 视图 URL
+                  data: data,
+                  success: function (response) {
+                    // 处理成功响应
+                    console.log(response)
+                    // 你可以在这里根据响应更新页面内容或跳转
+                    window.location.href = response.redirect_url
+                  },
+                  error: function (xhr, status, error) {
+                    // 处理错误
+                    console.error(error)
+                  }
+                })
+              }
+            </script> {% endcomment %}
           </div>
-          {% endfor %}
+          <!-- 检查回复的回复 -->
+          {% if reply.replies %}
+            <div class="replies">
+              {% for sub_reply in reply.replies %}
+                <div class="post reply" style="margin-left: 40px">
+                  <div class="author">{{ sub_reply.author }}</div>
+                  <div class="post-time">{{ sub_reply.post_time }}</div>
+                  <div class="content">{{ sub_reply.content }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
-        {% endif %}
-      </div>
       {% endfor %}
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var replyButtons = document.querySelectorAll(".reply-button");
+      document.addEventListener('DOMContentLoaded', function () {
+        var replyButtons = document.querySelectorAll('.reply-button')
         replyButtons.forEach(function (button) {
-          button.addEventListener("click", function () {
-            var form = this.nextElementSibling;
-            if (form.style.display === "none" || form.style.display === "") {
-              form.style.display = "block";
+          button.addEventListener('click', function () {
+            var form = this.nextElementSibling
+            if (form.style.display === 'none' || form.style.display === '') {
+              form.style.display = 'block'
             } else {
-              form.style.display = "none";
+              form.style.display = 'none'
             }
-          });
-        });
-      });
+          })
+        })
+      })
+    </script>
+    <script>
+      function Submit(m_id) {
+        var reply = document.getElementById(m_id).value;      
+        const data = {
+          input_content: reply,
+          m_id: m_id,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        }
+        console.log(data)
+        // 发送 Ajax 请求
+        $.ajax({
+          type: 'POST',
+          url: '{% url "reply" %}', // 替换成你的 Django 视图 URL
+          data: data,
+          success: function (response) {
+            // 处理成功响应
+            console.log(response)
+            // 你可以在这里根据响应更新页面内容或跳转
+            window.location.href = response.redirect_url
+          },
+          error: function (xhr, status, error) {
+            // 处理错误
+            console.error(error)
+          }
+        })
+      }
     </script>
   </body>
 </html>

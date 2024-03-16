@@ -1,323 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>移动端网站示例</title>
-    {% comment %} // TODO: 在进入页面的时候先显示一个一言页面 {% endcomment %}
-    <link href="/static/login.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="main-content1">
-      <div class="status-bar">
-        <button class="login-btn">登录</button>
-        <span class="status-text">欢迎来到我们的网站</span>
-        <button class="add-btn">+</button>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>移动端网站示例</title>
+  {% comment %} // TODO: 在进入页面的时候先显示一个一言页面 {% endcomment %}
+  <link href="/static/login.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="main-content1">
+    <div class="status-bar">
+      <button class="login-btn" onclick="window.location.href = 'login1'">登录</button>
+      <span class="status-text">祝你乘风破浪</span>
+      <button class="add-btn" onclick="showPopup()">+</button>
+
+      <div id="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <input type="text" id="input-content" placeholder="输入内容" style="width: 100%; margin-bottom: 10px; padding: 10px; font-size: 33px;">
+          <div style="display: flex; width: 100%;">
+            <button onclick="showContent('diary')" style="flex: 1; padding: 10px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 40px; cursor: pointer; font-size: 33px;">日记</button>
+            <button onclick="showContent('explore')" style="flex: 1; padding: 10px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 40px; cursor: pointer; font-size: 33px;">探索</button>
+            <button onclick="showContent('close')" style="flex: 1; padding: 10px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 40px; cursor: pointer; font-size: 33px;">取消</button>
+          </div>
+        </div>
       </div>
-      <div class="main-content">
-        <div class="container">
-          <div
+
+      <script>
+        function showPopup() {
+          var popup = document.getElementById("popup");
+          popup.style.display = "block";
+        }
+
+        function showContent(content) {
+          if (content=='close'){
+            var popup = document.getElementById("popup");
+            popup.style.display = "none";
+          }
+          else{
+            var popup = document.getElementById("popup");
+            popup.style.display = "none";
+            var inputContent = document.getElementById("input-content").value;
+            console.log("You clicked on " + content + " with content " + inputContent);
+                    // 构建要发送的数据
+            const data = {
+          input_content: inputContent,
+          input_type: content,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+            };
+                    // 发送 Ajax 请求
+        $.ajax({
+          type: "POST",
+          url: '{% url "add_button" %}', // 替换成你的 Django 视图 URL
+          data: data,
+          success: function (response) {
+            // 处理成功响应
+            console.log(response);
+            // 你可以在这里根据响应更新页面内容或跳转
+            window.location.href = response.redirect_url;
+          },
+          error: function (xhr, status, error) {
+            // 处理错误
+            console.error(error);
+          },
+        });
+          }
+        }
+      </script>
+    </div>
+    <div class="main-content">
+      <div class="container">
+        <!-- Rest of the code -->
+      </div>
+    </div>
+  </div>
+</body>
+
+            
+
+    <div class="main-content">
+      <div class="container">
+        <!-- <div
             id="center-message"
             style="text-align: center; margin-top: 20vh; font-size: 24px"
           >
             永远相信美好的事情即将发生
-          </div>
+          </div> -->
 
-          <div id="station-content" class="content">
-            {% for station in stations %}
-            <div
-              class="content-item"
-              data-id="{{ station.id }}"
-              data-type="station"
-            >
-              <img src="{{ station.image }}" />
-              <div class="title">{{ station.name }}</div>
-            </div>
-            {% endfor %}
+        <div id="station-content" class="content">
+          {% for station in stations %}
+          <div class="content-item" data-id="{{ station.id }}" data-type="station">
+            <img src="{{ station.image }}" />
+            <div class="title">{{ station.name }}</div>
           </div>
-          <div id="diary-content" class="content">
-            {% for diary in diaries %}
-            <div
-              class="content-item"
-              data-id="{{ diary.id }}"
-              data-type="diary"
-            >
-              <img src="{{ diary.image }}" />
-              <div class="title">{{ diary.title }}</div>
-            </div>
-            {% endfor %}
+          {% endfor %}
+        </div>
+        <div id="diary-content" class="content">
+          {% for diary in diaries %}
+          <div class="content-item" data-id="{{ diary.id }}" data-type="diary">
+            <img src="{{ diary.image }}" />
+            <div class="title">{{ diary.title }}</div>
           </div>
-          <div id="music-content" class="content">
-            {% for music in musics %}
-            <div
-              class="content-item"
-              data-id="{{ music.id }}"
-              data-type="music"
-            >
-              <img src="{{ music.poster }}" />
-              <div class="title">{{ music.name }}</div>
-            </div>
-            {% endfor %}
+          {% endfor %}
+        </div>
+        <div id="music-content" class="content">
+          {% for music in musics %}
+          <div class="content-item" data-id="{{ music.id }}" data-type="music">
+            <img src="{{ music.poster }}" />
+            <div class="title">{{ music.name }}</div>
           </div>
-          <div id="explore-content" class="content">
-            {% for explore in explores %}
-            <div
-              class="content-item"
-              data-id="{{ explore.id }}"
-              data-type="explore"
-            >
-              <img src="{{ explore.image }}" />
-              <div class="title">{{ explore.name }}</div>
-            </div>
-            {% endfor %}
+          {% endfor %}
+        </div>
+        <div id="explore-content" class="content">
+          {% for explore in explores %}
+          <div class="content-item" data-id="{{ explore.id }}" data-type="explore">
+            <img src="{{ explore.image }}" />
+            <div class="title">{{ explore.name }}</div>
           </div>
+          {% endfor %}
         </div>
       </div>
-      <div class="bottom-bar">
-        <a
-          href="#"
-          class="bottom-bar-item"
-          onclick="toggleContent('station', this)"
-        >
-          <div class="icon">心灵</div>
-          驿站
-        </a>
-        <a
-          href="#"
-          class="bottom-bar-item"
-          onclick="toggleContent('diary', this)"
-        >
-          <div class="icon">心情</div>
-          日记
-        </a>
-        <a
-          href="#"
-          class="bottom-bar-item"
-          onclick="toggleContent('music', this)"
-        >
-          <div class="icon">疗愈</div>
-          音乐
-        </a>
-        <a
-          href="#"
-          class="bottom-bar-item"
-          onclick="toggleContent('explore', this)"
-        >
-          <div class="icon">应用</div>
-          探索
-        </a>
-      </div>
     </div>
+    <div class="bottom-bar">
+      <a href="#" class="bottom-bar-item" onclick="toggleContent('station', this)">
+        <div class="icon">驿站</div>
+
+      </a>
+      <a href="#" class="bottom-bar-item" onclick="toggleContent('diary', this)">
+        <div class="icon">日记</div>
+
+      </a>
+      <a href="#" class="bottom-bar-item" onclick="toggleContent('music', this)">
+        <div class="icon">音乐</div>
+
+      </a>
+      <a href="#" class="bottom-bar-item" onclick="toggleContent('explore', this)">
+        <div class="icon">探索</div>
+
+      </a>
+    </div>
+  </div>
   </script>
-    <script>
-      function toggleContent(contentId, element) {
-        var contents = document.querySelectorAll(".content-item");
-        contents.forEach(function (content) {
-          content.style.display = "none";
+  <script>
+    function toggleContent(contentId, element) {
+      var contents = document.querySelectorAll(".content-item");
+      contents.forEach(function (content) {
+        content.style.display = "none";
+      });
+
+      var activeContent = document.getElementById(contentId + "-content");
+      if (activeContent) {
+        activeContent.style.display = "block";
+        var relatedContentItems =
+          activeContent.querySelectorAll(".content-item");
+        relatedContentItems.forEach(function (item) {
+          item.style.display = "flex";
         });
-
-        var activeContent = document.getElementById(contentId + "-content");
-        if (activeContent) {
-          activeContent.style.display = "block";
-          var relatedContentItems =
-            activeContent.querySelectorAll(".content-item");
-          relatedContentItems.forEach(function (item) {
-            item.style.display = "flex";
-          });
-        }
-
-        var bottomBarItems = document.querySelectorAll(".bottom-bar-item");
-        bottomBarItems.forEach(function (item) {
-          item.classList.remove("active");
-        });
-        element.classList.add("active");
-
-        // Hide center message
-        var centerMessage = document.getElementById("center-message");
-        centerMessage.style.display = "none";
       }
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <script>
-      $(document).ready(function () {
-        // 给每个内容项添加点击事件监听
-        $(".content-item").click(function () {
-          const itemId = $(this).data("id");
-          const itemType = $(this).data("type");
-          console.log("You clicked on " + itemType + " with ID " + itemId);
-          // 构建要发送的数据
-          const data = {
-            id: itemId,
-            type: itemType,
-            csrfmiddlewaretoken: "{{ csrf_token }}",
-          };
-      
-          // 发送 Ajax 请求
-          $.ajax({
-            type: "POST",
-            url: '{% url "login" %}', // 替换成你的 Django 视图 URL
-            data: data,
-            success: function (response) {
-              // 处理成功响应
-              console.log(response);
-              // 你可以在这里根据响应更新页面内容或跳转
-              window.location.href = response.redirect_url;
-            },
-            error: function (xhr, status, error) {
-              // 处理错误
-              console.error(error);
-            },
-          });
+
+      var bottomBarItems = document.querySelectorAll(".bottom-bar-item");
+      bottomBarItems.forEach(function (item) {
+        item.classList.remove("active");
+      });
+      element.classList.add("active");
+
+      // Hide center message
+      var centerMessage = document.getElementById("center-message");
+      centerMessage.style.display = "none";
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      // 给每个内容项添加点击事件监听
+      $(".content-item").click(function () {
+        const itemId = $(this).data("id");
+        const itemType = $(this).data("type");
+        console.log("You clicked on " + itemType + " with ID " + itemId);
+        // 构建要发送的数据
+        const data = {
+          id: itemId,
+          type: itemType,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        };
+
+        // 发送 Ajax 请求
+        $.ajax({
+          type: "POST",
+          url: '{% url "login" %}', // 替换成你的 Django 视图 URL
+          data: data,
+          success: function (response) {
+            // 处理成功响应
+            console.log(response);
+            // 你可以在这里根据响应更新页面内容或跳转
+            window.location.href = response.redirect_url;
+          },
+          error: function (xhr, status, error) {
+            // 处理错误
+            console.error(error);
+          },
         });
       });
-      
-      !(function () {
-        function n(n, e, t) {
-          return n.getAttribute(e) || t;
-        }
-      
-        function e(n) {
-          return document.getElementsByTagName(n);
-        }
-      
-        function t() {
-          var t = e("script"),
-            o = t.length,
-            i = t[o - 1];
-          return {
-            l: o,
-            z: n(i, "zIndex", -1),
-            o: n(i, "opacity", 0.5),
-            c: n(i, "color", "0,0,0"),
-            n: n(i, "count", 99),
-          };
-        }
-      
-        function o() {
-          (a = m.width =
-            window.innerWidth ||
-            document.documentElement.clientWidth ||
-            document.body.clientWidth),
-            (c = m.height =
-              window.innerHeight ||
-              document.documentElement.clientHeight ||
-              document.body.clientHeight);
-        }
-      
-        function i() {
-          r.clearRect(0, 0, a, c);
-          var n, e, t, o, m, l;
-          s.forEach(function (i, x) {
-            for (
-              i.x += i.xa,
-                i.y += i.ya,
-                i.xa *= i.x > a || i.x < 0 ? -1 : 1,
-                i.ya *= i.y > c || i.y < 0 ? -1 : 1,
-                r.fillRect(i.x - 0.5, i.y - 0.5, 1, 1),
-                e = x + 1;
-              e < u.length;
-              e++
-            )
-              (n = u[e]),
-                null !== n.x &&
-                  null !== n.y &&
-                  ((o = i.x - n.x),
-                  (m = i.y - n.y),
-                  (l = o * o + m * m),
-                  l < n.max &&
-                    (n === y &&
-                      l >= n.max / 2 &&
-                      ((i.x -= 0.03 * o), (i.y -= 0.03 * m)),
-                    (t = (n.max - l) / n.max),
-                    r.beginPath(),
-                    (r.lineWidth = t / 2),
-                    (r.strokeStyle = "rgba(" + d.c + "," + (t + 0.2) + ")"),
-                    r.moveTo(i.x, i.y),
-                    r.lineTo(n.x, n.y),
-                    r.stroke()));
-          }),
-            x(i);
-        }
-      
-        var a,
-          c,
-          u,
-          m = document.createElement("canvas"),
-          d = t(),
-          l = "c_n" + d.l,
-          r = m.getContext("2d"),
-          x =
-            window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            function (n) {
-              window.setTimeout(n, 1e3 / 45);
-            },
-          w = Math.random,
-          y = { x: null, y: null, max: 2e4 };
-        (m.id = l),
-          (m.style.cssText =
-            "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o),
-          e("body")[0].appendChild(m),
-          o(),
-          (window.onresize = o),
-          (window.onmousemove = function (n) {
-            (n = n || window.event), (y.x = n.clientX), (y.y = n.clientY);
-          }),
-          (window.onmouseout = function () {
-            (y.x = null), (y.y = null);
-          });
-        for (var s = [], f = 0; d.n > f; f++) {
-          var h = w() * a,
-            g = w() * c,
-            v = 2 * w() - 1,
-            p = 2 * w() - 1;
-          s.push({ x: h, y: g, xa: v, ya: p, max: 6e3 });
-        }
-        (u = s.concat([y])),
-          setTimeout(function () {
-            i();
-          }, 100);
-      })();
+    });
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const messages = [
-          "欢迎来到我们的网站",
-          "心里全是苦的人，只需要一点点的甜就能填满。",
-          "每天进步一点点",
-          "保持好奇心",
-          "享受生活的美好",
-        ];
-        const statusText = document.querySelector(".status-text");
-      
-        setInterval(() => {
-          // 随机选择一个新的消息
-          const message = messages[Math.floor(Math.random() * messages.length)];
-      
-          // 添加淡出效果
-          statusText.classList.add("fade-out");
-      
-          // 等待淡出动画完成
+    !(function () {
+      function n(n, e, t) {
+        return n.getAttribute(e) || t;
+      }
+
+      function e(n) {
+        return document.getElementsByTagName(n);
+      }
+
+      function t() {
+        var t = e("script"),
+          o = t.length,
+          i = t[o - 1];
+        return {
+          l: o,
+          z: n(i, "zIndex", -1),
+          o: n(i, "opacity", 0.5),
+          c: n(i, "color", "0,0,0"),
+          n: n(i, "count", 99),
+        };
+      }
+
+      function o() {
+        (a = m.width =
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth),
+          (c = m.height =
+            window.innerHeight ||
+            document.documentElement.clientHeight ||
+            document.body.clientHeight);
+      }
+
+      function i() {
+        r.clearRect(0, 0, a, c);
+        var n, e, t, o, m, l;
+        s.forEach(function (i, x) {
+          for (
+            i.x += i.xa,
+            i.y += i.ya,
+            i.xa *= i.x > a || i.x < 0 ? -1 : 1,
+            i.ya *= i.y > c || i.y < 0 ? -1 : 1,
+            r.fillRect(i.x - 0.5, i.y - 0.5, 1, 1),
+            e = x + 1;
+            e < u.length;
+            e++
+          )
+            (n = u[e]),
+              null !== n.x &&
+              null !== n.y &&
+              ((o = i.x - n.x),
+                (m = i.y - n.y),
+                (l = o * o + m * m),
+                l < n.max &&
+                (n === y &&
+                  l >= n.max / 2 &&
+                  ((i.x -= 0.03 * o), (i.y -= 0.03 * m)),
+                  (t = (n.max - l) / n.max),
+                  r.beginPath(),
+                  (r.lineWidth = t / 2),
+                  (r.strokeStyle = "rgba(" + d.c + "," + (t + 0.2) + ")"),
+                  r.moveTo(i.x, i.y),
+                  r.lineTo(n.x, n.y),
+                  r.stroke()));
+        }),
+          x(i);
+      }
+
+      var a,
+        c,
+        u,
+        m = document.createElement("canvas"),
+        d = t(),
+        l = "c_n" + d.l,
+        r = m.getContext("2d"),
+        x =
+          window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          window.oRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function (n) {
+            window.setTimeout(n, 1e3 / 45);
+          },
+        w = Math.random,
+        y = { x: null, y: null, max: 2e4 };
+      (m.id = l),
+        (m.style.cssText =
+          "position:fixed;top:0;left:0;z-index:" + d.z + ";opacity:" + d.o),
+        e("body")[0].appendChild(m),
+        o(),
+        (window.onresize = o),
+        (window.onmousemove = function (n) {
+          (n = n || window.event), (y.x = n.clientX), (y.y = n.clientY);
+        }),
+        (window.onmouseout = function () {
+          (y.x = null), (y.y = null);
+        });
+      for (var s = [], f = 0; d.n > f; f++) {
+        var h = w() * a,
+          g = w() * c,
+          v = 2 * w() - 1,
+          p = 2 * w() - 1;
+        s.push({ x: h, y: g, xa: v, ya: p, max: 6e3 });
+      }
+      (u = s.concat([y])),
+        setTimeout(function () {
+          i();
+        }, 100);
+    })();
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const messages = [
+        "生活很苦， 但不要放弃爱与希望",
+        "你比你自己想象中的还要强大",
+        "纵然世间黑暗， 仍有一点星光。",
+        "把握现在， 就是创造未来",
+        "纵然世间黑暗， 仍有一点星光",
+        "你比你自己想象中的还要强大",
+        "黑暗的笼罩更会凸显光明的可贵",
+        "生活很苦， 但不要放弃爱与希望",
+        "成功最重要的因素是要有一个健康的身体和旺盛的精力",
+        "自己战胜自己是最可贵的胜利",
+        "世界的模样， 取决你凝视它的目光",
+        "把握现在， 就是创造未来",
+        "只要路是对的， 就不怕路远",
+        " 让我们将事前的忧虑， 换为事前的思考和计划吧",
+        " 是非天天有， 不听自然无",
+        " 相信就是强大",
+        " 保持热爱， 奔赴山海",
+        " 人因为热爱生活而被治愈",
+        " 山河浩瀚， 宇宙浪漫， 值得一看",
+        " 今天比昨天好， 这就是希望",
+        " 莫道儒冠误此生， 从来诗书不负人",
+        " 每天回家都要把不开心关在门外呀",
+        " 慢慢变好， 才是给自己最好的礼物",
+        " 心怀光明， 一直前进",
+        " 人生没有白走的路， 每一步都算数",
+        " 给所有不开心的贴上过去的标签",
+        " 别慌， 月亮也在大海某处迷茫",
+        " 纵有疾风起， 人生不言弃",
+        " 路上总有阴影， 但抬头总能看见光明",
+        " 人生总会有不期而遇的温暖， 和生生不息的希望",
+        " 每个人的生命中， 都有最艰难的一年， 将人生变得美好而辽阔",
+        " 再长的路， 一步步也能走完",
+        " 面朝阳光， 一路向前， 去遇见那个更好的自己",
+        " 一路向前， 去遇见那个更好的自己",
+        " 发光不是太阳的权利， 每个人都可以熬过最苦的日子， 去做最酷的自己",
+        " 你的肩上是风, 风上是闪烁的星群",
+        " 祝你乘风破浪",
+        " 星星永远发着光， 我也会在你身旁",
+        " 人生忽如寄， 莫辜负茶、 汤、 好天气。"
+      ];
+      const statusText = document.querySelector(".status-text");
+
+      setInterval(() => {
+        // 随机选择一个新的消息
+        const message = messages[Math.floor(Math.random() * messages.length)];
+
+        // 添加淡出效果
+        statusText.classList.add("fade-out");
+
+        // 等待淡出动画完成
+        setTimeout(() => {
+          // 更新文本
+          statusText.textContent = message;
+
+          // 移除淡出类，添加淡入类来显示新消息
+          statusText.classList.remove("fade-out");
+          statusText.classList.add("fade-in");
+
+          // 再次等待淡入效果完成后移除淡入类，以便下一次动画能正常播放
           setTimeout(() => {
-            // 更新文本
-            statusText.textContent = message;
-      
-            // 移除淡出类，添加淡入类来显示新消息
-            statusText.classList.remove("fade-out");
-            statusText.classList.add("fade-in");
-      
-            // 再次等待淡入效果完成后移除淡入类，以便下一次动画能正常播放
-            setTimeout(() => {
-              statusText.classList.remove("fade-in");
-            }, 500); // 这里的500ms应与CSS中的transition时间一致
-          }, 500); // 这里的延迟时间应与CSS中的transition时间一致
-        }, 5000); // 每5秒更换一次消息
-      });
-      
-    </script>
-    {% comment %} <script src="/static/login.js"></script> {% endcomment %}
-  </body>
+            statusText.classList.remove("fade-in");
+          }, 500); // 这里的500ms应与CSS中的transition时间一致
+        }, 500); // 这里的延迟时间应与CSS中的transition时间一致
+      }, 5000); // 每5秒更换一次消息
+
+    });
+    var username = "{{ username }}"; // 获取用户名
+    var loginButton = document.querySelector('.login-btn');
+
+    // 根据用户名设置按钮文本
+    if (username === '') {
+      loginButton.textContent = '登录';
+    } else {
+      loginButton.textContent = username;
+    }
+  </script>
+</body>
+
 </html>
