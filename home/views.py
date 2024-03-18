@@ -131,7 +131,7 @@ def get_replies(c, parent_id):
 def show_diary(request):
     if request.method == "POST":
         try:
-            if request.POST.get("delete")=="yes":
+            if request.POST.get("delete") == "yes":
                 conn = sqlite3.connect("db.sqlite3")
                 cursor = conn.cursor()
                 cursor.execute("DELETE FROM home_diary WHERE id = ?", (content_id,))
@@ -139,7 +139,10 @@ def show_diary(request):
                 cursor.close()
                 conn.close()
                 return JsonResponse(
-                    {"status": "success", "message": "Diary entry deleted successfully."}
+                    {
+                        "status": "success",
+                        "message": "Diary entry deleted successfully.",
+                    }
                 )
             # 直接从POST数据中解析，无需json.loads
             title = request.POST.get("title")
@@ -192,12 +195,13 @@ def show_explore(request):
         {"original_post": original_dict, "replies": replies_dict},
     )
 
-
+content_name = ""
 def show_station(request):
     if request.method == "POST":
         global content_id
         content_type = request.POST.get("type")
-        content_name = request.POST.get("name")
+        global content_name
+        content_name= request.POST.get("name")
 
         global file
         if content_type == "科普":
@@ -310,10 +314,160 @@ def show_article(request):
 
 
 def show_survey(request):
-    # return HttpResponse('survey')
-    return render(request, file)
+    conn = sqlite3.connect("db.sqlite3")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM home_questionnaire WHERE title = ?", (content_name,))
+    _ = cursor.fetchone()    
+    questionnaire={}
+    questionnaire["title"]=content_name
+    questionnaire["description"]=_[3]
+    questionnaire["result"]=_[2]
+    questions=[]
+    cursor.execute("SELECT * FROM home_question WHERE questionnaire_id = ?", (_[0],))
+    _ = cursor.fetchall()
+    for i in _:
+        question={}
+        question["id"]=i[0]
+        question["text"]=i[1]
+        question["options"]=[]
+        # print(_)
+        for j in range(3, 7):
+            if i[j]:
+                # question["options"].append({"value": i, "label": idx[i]})
+                cursor.execute("SELECT * FROM home_option WHERE id = ?", (i[j],))
+                opt = cursor.fetchone()
+                print(opt)
+                question["options"].append({"value": opt[2], "text": opt[1]})
+        questions.append(question)
+    return render(request, "survey.html", {"questionnaire": questionnaire,"questions":questions})
+    # return render(request, file, {"questions": questions})
+    questions = []
+    if file == "适应障碍-大学生适应性量表.html":
+        question = """ 
+1.我时大学的学习感到无所适从。
+2.我感到周围的人难以相处，
+3.我和异性同学相处得不好。
+4.我觉得自己还没有作好进入社会的准备。
+5.我能独立地处理日常事务。
+6.周末我常常堂得没事可做。
+7.我经常感到身体乏力，不舒服。
+8.我时常无理由地郁郁寡欢。
+9.我时自己上了这所大学感到高兴。
+10.父每不在身边，我也能够田顾好自己。
+11.我从没有考虑过以后的就业问题。
+12.我参与了很多大学里的社会活动。
+13.我能很快化解与他人的矛盾冲突。
+14 我无法适应大学教师的投课方式。
+15.我不知道以何种方式与大学老师相处。
+16.我根难加入到别人的讨论中去。
+17.我从不关心学习以外的东西。
+18.我有明确的就业意向。
+19.我常打电话向家人诉苦或求助。
+20.我很喜欢校园里的自然环境。
+21.我很容易生气。22.我总是没精打采。
+23.我对大学里的谋外活动感到满意。
+24.我不敢单独上街买东西。
+25.我不知道自己适合从事哪方面的工作。
+26.我只在乎自己的学业成绩。
+27.大伙儿讲话时，我时需躲在后面。
+28.在考试前，我不如道该如何着手复习。
+29.我现在还没找到自己较为满意的学习方法。
+30.我在大学里如那地结交了一些朋友。
+31.除了学习，我很少参加别的活动。
+32.我难以决定自己该到哪星工作。
+33.我很少自己动手洗衣服。
+3L 学校的娱乐设施不能满足我的需要。
+35.我容易觉得累。
+36.我的胃口还好。
+37.我认为学校的风气很糟。
+38.在大学什么都差靠自己，我感到很不适应。
+39.我有意识地训练自己的职业技能。
+40.若有机会，我能胜任某种学生干部的工作。
+41.我觉得我已融入了大学的环境。
+42 我一直都没有明确的学习计划。
+43.我感到无法缓解自己的学习压力。4L 我感到自己在学校里成了一个被道忘的人。
+45.我很重视发展自己的业余爱好。
+46.我参加过与专业有关的社会实践活动。
+47.我觉得学校的硬件设施很差。
+48.我的体重增加(或减少》了很多。
+49.我很容易失眠。
+50.我有意识他通过各种渠道收集就业信息。
+51.我认为在大学集应多参加一些学习以外的活动。
+52.我害怕与异性同学交往。
+53.我对自己在班上的学业地位感到失望。
+5L 我不知道哪些专业知识是以后工作所需要的。
+55.我能与人愉快的进行合作。
+56.我常感到头痛。
+57.我有时想找心理医生寻求帮助。
+58.在学校票和同学在一起时，我感到不自在。
+59.与我的努力相比。我的学习成绩不算好。
+60.对于我在大学里的社空。我感到相当满意。
+61.我的确不胜任大学的学习任务。
+62.在大学菜，我有一些亲害的朋友。
+63.我有意识地培养自己的业会兴趣。
+64.我有业识的为以后的就业加强各种训练，
+65.我认为学校的风气很差。
+66.完全拿自己，自己对自己负责，这对于我而言并不容易。
+""".split()
+        options = [{"value":1,"label":"很不符合"},{"value":2,"label":"不太符合"},{"value":3,"label":"不能确定"},{"value":4,"label":"有点符合"},{"value":5,"label":"非常符合"}]
+        for q in question:
+            questions.append({"id":len(questions)+1,"text":q,"options":options})
+    if file == "适应障碍-工作适应障碍量表.html":
+        options = [{"value":1,"label":"对"},{"value":2,"label":"错"}]
+        Tfor1 = [3,4,5,6,7,8,9,10,12,13,15,17,18,20,21,22,23,25,26,27,28,29,30,31,33,34,35,36,37]
+        question = """1. 我早上起来的时候，多半觉得睡眠充足，头脑清醒。
+2. 我现在工作（学习）的能力，和从前差不多。
+3. 我总是在很紧张的情况下工作。
+4. 我深信生活对我是不公平的。
+5. 我发现我很难把注意力集中到一件工作上。
+6. 假如不是有人和我作对，我一定会有更大的成就。
+7. 有很多时候我宁愿坐着空想，而不愿做任何事情。
+8. 我曾一连几天、几个星期、几个月什么也不想干，因为我总是提不起精神。
+9. 我时常得听从某些人的指挥，其实他们还不如我高明。
+10. 现在，我发现自己很容易自暴自弃。
+11. 我总觉得人生是有价值的。
+12. 有些人太霸道，即使我明知他们是对的，也要和他们对着干。
+13. 我时常认为必须坚持那些我认为正确的事。
+14. 我喜欢研究和阅读与我目前工作有关东西。
+15. 我不在乎别人对我有什么看法。
+16. 我喜欢许多不同种类的游戏和娱乐。
+17. 我的做事方法容易被人误解。
+18. 有人想把世界上所能得到的东西都夺到手，我决不责怪他。
+19. 凡是我所做的事，我都指望能够成功。
+20. 做什么事情，我都感到难以开头。
+21. 我有时精力充沛。
+22. 许多时候，生活对我来说是一件吃力的事。
+23. 我不喜欢有人在我的身旁。
+24. 在我的日常生活中，充满着使我感兴趣的事情。
+25. 假如不是有人和我作对，我一定会有更大的成就。
+26. 我不能专心于一件事情上。
+27. 哪怕是琐碎的小事，我也再三考虑后才去做。
+28. 我时常遇见一些所谓的专家，他们并不比我高明。
+29. 当事情不顺利的时候，我就想立即放弃。
+30. 面对困难或危险的时候，我总退缩不前。
+31. 当我想纠正别人的错误和帮助他们的时候，我的好意常被误解。
+32. 我通常很镇静，不容易激动。
+33. 我通常喜欢和妇女一起工作。
+34. 我的计划看来总是困难重重，使我不得不一一放弃。
+35. 我经常遇到一些顶头上司，他们把功劳归于自己，把错误推给下级。
+36. 我的前途似乎没有希望。
+37. 未来是变化无常的，一个人很难做出认真的安排。""".split("\n")
+        for i in range(1,38):
+            if i in Tfor1:
+                questions.append({"id":i,"text":question[i-1],"options":options})
+            else:
+                questions.append({"id":i,"text":question[i-1],"options":[{"value":2,"label":"对"},{"value":1,"label":"错"}]})
 
 
+
+    def show_survey(request):
+        questionnaires = Questionnaires.objects.all()
+        return render(request, "survey.html", {"questionnaires": questionnaires})
+    c = conn.cursor()
+    c.execute("SELECT * FROM Questionnaires")
+    questionnaires = c.fetchall()
+    conn.close()
+    return render(request, "survey.html", {"questionnaires": questionnaires})
 def show_music(request):
     # musics[int(content_id) - 1]
     # 假设 musics 是您的数组，content_id 是要移动到开头的元素的索引（从 1 开始）

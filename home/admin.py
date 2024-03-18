@@ -10,7 +10,22 @@ from .models import (
     item,
     diary,
     music,
+    Questionnaire,
+    Question,
+    Option,
 )
+
+
+class QuestionnaireAdmin(admin.ModelAdmin):
+    list_display = ["title", "description", "result"]
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ["questionnaire", "text", "option1", "option2", "option3", "option4", "option5", "option6", "option7"]
+
+
+class OptionAdmin(admin.ModelAdmin):
+    list_display = [ "text", "value"]
 
 
 class categoryAdmin(admin.ModelAdmin):
@@ -99,3 +114,6 @@ admin.site.register(subcategory, subcategoryadmin)
 admin.site.register(item, itemAdmin)
 admin.site.register(diary, diaryAdmin)
 admin.site.register(music, musicAdmin)
+admin.site.register(Questionnaire, QuestionnaireAdmin)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Option, OptionAdmin)

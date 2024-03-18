@@ -10,9 +10,26 @@
 
 <body>
   <div class="survey-container">
-    <h2>焦虑心理-焦虑自评量表测试</h2>
+    <h2>焦虑自评量表测试</h2>
+    <style>
+      .description {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+      .content-item {
+        align-items: center;
+        margin-bottom: 10px;
+        background-color: #fff;
+        padding: 20px; /* 增大内边距 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 加重阴影 */
+        cursor: pointer; /* 新增样式，使其可点击 */
+        border-radius: 10px; /* 圆角效果 */
+      }
+    </style>
+
     <!-- 问题1 -->
-    <div class="question">
+    <div class="question content-item">
       <p>1、我觉得比平常容易紧张和着急。</p>
       <!-- <label> <input type="radio" name="q1" value="1" required /> 是 </label>
       <label> <input type="radio" name="q1" value="0" /> 否 </label> -->
@@ -22,133 +39,133 @@
       <label> <input type="radio" name="q1" value="4" /> 绝大部分或全部时间 </label>
     </div>
     <!-- 问题2 -->
-    <div class="question">
+    <div class="question content-item">
       <p>2、我无缘无故地感到害怕。</p>
       <label> <input type="radio" name="q2" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q2" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q2" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q2" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>3、我容易心里烦乱或觉得惊慌。</p>
       <label> <input type="radio" name="q3" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q3" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q3" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q3" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>4、我觉得我可能将要发疯。</p>
       <label> <input type="radio" name="q4" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q4" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q4" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q4" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>5、我觉得一切都很好，也不会发生什么不幸。</p>
       <label> <input type="radio" name="q5" value="4" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q5" value="3" /> 小部分时间 </label>
       <label> <input type="radio" name="q5" value="2" /> 相当多时间 </label>
       <label> <input type="radio" name="q5" value="1" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>6、我手脚发抖打颤。</p>
       <label> <input type="radio" name="q6" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q6" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q6" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q6" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>7、我因为头痛、头颈痛和背痛而苦恼。</p>
       <label> <input type="radio" name="q7" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q7" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q7" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q7" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>8、我感觉容易衰弱和疲乏。</p>
       <label> <input type="radio" name="q8" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q8" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q8" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q8" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>9、我觉得心平气和，并且容易安静地坐着。</p>
       <label> <input type="radio" name="q9" value="4" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q9" value="3" /> 小部分时间 </label>
       <label> <input type="radio" name="q9" value="2" /> 相当多时间 </label>
       <label> <input type="radio" name="q9" value="1" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>10、我觉得心跳得很快。</p>
       <label> <input type="radio" name="q10" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q10" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q10" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q10" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>11、我因为一阵阵头晕而苦恼。</p>
       <label> <input type="radio" name="q11" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q11" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q11" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q11" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>12、我有晕倒发作，或觉得要晕倒似的。</p>
       <label> <input type="radio" name="q12" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q12" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q12" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q12" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>13、我吸气呼气都感到很容易。</p>
       <label> <input type="radio" name="q13" value="4" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q13" value="3" /> 小部分时间 </label>
       <label> <input type="radio" name="q13" value="2" /> 相当多时间 </label>
       <label> <input type="radio" name="q13" value="1" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>14、我手脚麻木和刺痛。</p>
       <label> <input type="radio" name="q14" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q14" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q14" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q14" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>15、我因为胃痛和消化不良而苦恼。</p>
       <label> <input type="radio" name="q15" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q15" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q15" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q15" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>16、我常常要小便。</p>
       <label> <input type="radio" name="q16" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q16" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q16" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q16" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>17、我的手常常是干燥温暖的。</p>
       <label> <input type="radio" name="q17" value="4" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q17" value="3" /> 小部分时间 </label>
       <label> <input type="radio" name="q17" value="2" /> 相当多时间 </label>
       <label> <input type="radio" name="q17" value="1" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>18、我脸红发热。</p>
       <label> <input type="radio" name="q18" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q18" value="2" /> 小部分时间 </label>
       <label> <input type="radio" name="q18" value="3" /> 相当多时间 </label>
       <label> <input type="radio" name="q18" value="4" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>19、我容易入睡并且一夜睡得很好。</p>
       <label> <input type="radio" name="q19" value="4" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q19" value="3" /> 小部分时间 </label>
       <label> <input type="radio" name="q19" value="2" /> 相当多时间 </label>
       <label> <input type="radio" name="q19" value="1" /> 绝大部分或全部时间 </label>
     </div>
-    <div class="question">
+    <div class="question content-item">
       <p>20、我作恶梦。</p>
       <label> <input type="radio" name="q20" value="1" required /> 没有或很少时间 </label>
       <label> <input type="radio" name="q20" value="2" /> 小部分时间 </label>

@@ -1,353 +1,174 @@
 <!DOCTYPE html>
 <html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>调查问卷</title>
+    <link href="/static/survey.css" rel="stylesheet" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>调查问卷</title>
-  <link href="/static/survey.css" rel="stylesheet" />
-  {% comment %} <link href="/static/login.css" rel="stylesheet" /> {% endcomment %}
-</head>
-
-<body>
-  <div class="survey-container">
-    <h2>强迫障碍量表</h2>
-      <style>
-        .description {
-          font-size: 16px;
-          color: #666;
-          margin-bottom: 20px;
-        }
-      </style>
-
-      <div class="description">
-        Y-BOCS 是评估病人强迫症状严重程度及治疗效果的主要衡量工具，包括强迫思维和强迫行为 2 个维度，共 10 个条目。该量表的 Cronbach′s α 系数为 0.75，具有较好的内容效度和结构效度。
+  <body>
+    <div class="survey-container">
+      <h2>强迫障碍量表</h2>
+      <div class="description">Y-BOCS 是评估病人强迫症状严重程度及治疗效果的主要衡量工具，包括强迫思维和强迫行为 2 个维度，共 10 个条目。该量表的 Cronbach′s α 系数为 0.75，具有较好的内容效度和结构效度。</div>
+      <div class="question content-item" id="question1">
+        <p>1、每天强迫思维的时间或频率</p>
+        <label><input type="radio" name="q1" value="0" onclick="handleFirstQuestion(0)" required />完全无强迫思维</label>
+        <label><input type="radio" name="q1" value="1" onclick="handleFirstQuestion(1)" />轻微（少于 1 小时），或偶尔有（不超过 8 次/天）</label>
+        <label><input type="radio" name="q1" value="2" onclick="handleFirstQuestion(2)" />中度（ 1—3 小时），或常常有（超过 8 次/天，但每天大部分时间没有强迫思维）</label>
+        <label><input type="radio" name="q1" value="3" onclick="handleFirstQuestion(3)" />重度（ 3—8 小时），或频率非常高（超过 8 次/天，且一天大部分时间有强迫思维）</label>
+        <label><input type="radio" name="q1" value="4" onclick="handleFirstQuestion(4)" />极重（8 小时以上），或几乎无时无刻都有</label>
       </div>
-      <style>
-        .content-item {
-          align-items: center;
-          margin-bottom: 10px;
-          background-color: #fff;
-          padding: 20px; /* 增大内边距 */
-          box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 加重阴影 */
+      <div class="question content-item" id="question2">
+        <p>2、强迫思维对学业、工作、社交或日常活动任意一项的妨碍（请考虑因为 强迫思维而不去做或减少做的事情）</p>
+        <label><input type="radio" name="q2" value="0" required />不受妨碍</label>
+        <label><input type="radio" name="q2" value="1" />轻微（稍微妨碍，但整体表现并无大碍）</label>
+        <label><input type="radio" name="q2" value="2" />中度（确实妨碍，但仍可应付）</label>
+        <label><input type="radio" name="q2" value="3" />重度（上述某一项或多项功能严重受损）</label>
+        <label><input type="radio" name="q2" value="4" />极度（上述某一项或多项功能丧失）</label>
+      </div>
+      <div class="question content-item" id="question3">
+        <p>3、强迫思维带来的苦恼或困扰</p>
+        <label><input type="radio" name="q3" value="0" required />没有</label>
+        <label><input type="radio" name="q3" value="1" />轻微</label>
+        <label><input type="radio" name="q3" value="2" />中度（尚可应付）</label>
+        <label><input type="radio" name="q3" value="3" />重度</label>
+        <label><input type="radio" name="q3" value="4" />极重（持续地感觉如同废人）</label>
+      </div>
+      <div class="question content-item" id="question4">
+        <p>4、与强迫思维的抗衡</p>
+        <label><input type="radio" name="q4" value="0" required />无需抗衡</label>
+        <label><input type="radio" name="q4" value="1" />基本能与之抗衡</label>
+        <label><input type="radio" name="q4" value="2" />有时能与之抗衡</label>
+        <label><input type="radio" name="q4" value="3" />经常屈服</label>
+        <label><input type="radio" name="q4" value="4" />完全屈服</label>
+      </div>
+      <div class="question content-item" id="question5">
+        <p>5、对强迫思维的掌控</p>
+        <label><input type="radio" name="q5" value="0" required />完全能控制</label>
+        <label><input type="radio" name="q5" value="1" />大多能控制</label>
+        <label><input type="radio" name="q5" value="2" />中等程度控制</label>
+        <label><input type="radio" name="q5" value="3" />很少能控制</label>
+        <label><input type="radio" name="q5" value="4" />完全无法控制</label>
+      </div>
+      <script>
+        function handleFirstQuestion(value) {
+          const questionsToHide = document.querySelectorAll('#question2, #question3, #question4, #question5')
+          if (value === 0) {
+            questionsToHide.forEach((question) => (question.style.display = 'none'))
+          } else {
+            questionsToHide.forEach((question) => (question.style.display = ''))
+          }
+        }
+      </script>
+      <div class="question content-item" id="question6">
+        <p>6、每天强迫行为的时间或频率</p>
+        <label><input type="radio" name="q6" value="0" onclick="handlesixthQuestion(0)" required />完全无强迫行为</label>
+        <label><input type="radio" name="q6" value="1" onclick="handlesixthQuestion(1)" />轻微（少于 1 小时）</label>
+        <label><input type="radio" name="q6" value="2" onclick="handlesixthQuestion(2)" />中度（ 1—3 小时），或常常有（超过 8 次/天，但一天大部分时间没有强 迫行为）</label>
+        <label><input type="radio" name="q6" value="3" onclick="handlesixthQuestion(3)" />重度（ 3—8 小时），或频率非常高（超过 8 次/天，且一天大部分时间有 强迫行为）</label>
+        <label><input type="radio" name="q6" value="4" onclick="handlesixthQuestion(4)" />极重（大于 8 小时），或几乎无时无刻都有</label>
+      </div>
+      <div class="question content-item" id="question7">
+        <p>7、强迫行为对学业、工作、社交或日常活动任意一项的妨碍（请考虑因为 强迫行为而不去做或减少做的事情）</p>
+        <label><input type="radio" name="q7" value="0" required />不受妨碍</label>
+        <label><input type="radio" name="q7" value="1" />轻微（稍微妨碍，但整体表现并无大碍）</label>
+        <label><input type="radio" name="q7" value="2" />中度（确实妨碍，但仍可应付）</label>
+        <label><input type="radio" name="q7" value="3" />重度（上述某一项或多项功能严重受损）</label>
+        <label><input type="radio" name="q7" value="4" />极度（上述某一项或多项功能丧失）</label>
+      </div>
+      <div class="question content-item" id="question8">
+        <p>8、强迫行为被制止时的焦虑程度</p>
+        <label><input type="radio" name="q8" value="0" required />没有焦虑</label>
+        <label><input type="radio" name="q8" value="1" />轻微</label>
+        <label><input type="radio" name="q8" value="2" />中度（仍可以应付）</label>
+        <label><input type="radio" name="q8" value="3" />严重</label>
+        <label><input type="radio" name="q8" value="4" />极度</label>
+      </div>
+      <div class="question content-item" id="question9">
+        <p>9、与抗强迫行为的抗衡</p>
+        <label><input type="radio" name="q9" value="0" required />无需对抗</label>
+        <label><input type="radio" name="q9" value="1" />基本能与之抗衡</label>
+        <label><input type="radio" name="q9" value="2" />有时能与之抗衡</label>
+        <label><input type="radio" name="q9" value="3" />经常屈服</label>
+        <label><input type="radio" name="q9" value="4" />完全屈服</label>
+      </div>
+      <div class="question content-item" id="question10">
+        <p>10、对强迫行为的掌控（回想那些控制强迫行为的情境，以便回答此题）</p>
+        <label><input type="radio" name="q10" value="0" required />完全控制</label>
+        <label><input type="radio" name="q10" value="1" />大多能控制（只要稍加注意即能停止强迫行为）</label>
+        <label><input type="radio" name="q10" value="2" />中等程度控制（注意虽能控制但有困难）</label>
+        <label><input type="radio" name="q10" value="3" />控制力弱（只能忍耐短暂的时间，但最终还是必须完成强迫行为）</label>
+        <label><input type="radio" name="q10" value="4" />完全无法控制（连忍耐短暂时间的能力都没有）</label>
+      </div>
+      <script>
+        function handlesixthQuestion(value) {
+          const questionsToHide = document.querySelectorAll('#question7, #question8, #question9, #question10')
+          if (value === 0) {
+            questionsToHide.forEach((question) => (question.style.display = 'none'))
+          } else {
+            questionsToHide.forEach((question) => (question.style.display = ''))
+          }
+        }
+      </script>
       
-          cursor: pointer; /* 新增样式，使其可点击 */
-          border-radius: 10px; /* 圆角效果 */
-      }
-    </style>
-    <div class="question content-item" id="question1">
-      <p>1、每天强迫思维的时间或频率</p>
-      <label> <input type="radio" name="q1" value="0" onclick="handleFirstQuestion(0)" required /> 完全无强迫思维 </label>
-      <label> <input type="radio" name="q1" value="1" onclick="handleFirstQuestion(1)" /> 轻微（少于 1 小时），或偶尔有（不超过 8 次/天） </label>
-      <label> <input type="radio" name="q1" value="2" onclick="handleFirstQuestion(2)" /> 中度（ 1—3 小时），或常常有（超过 8 次/天，但每天大部分时间没有强迫思维） </label>
-      <label> <input type="radio" name="q1" value="3" onclick="handleFirstQuestion(3)" /> 重度（ 3—8 小时），或频率非常高（超过 8 次/天，且一天大部分时间有强迫思维） </label>
-      <label> <input type="radio" name="q1" value="4" onclick="handleFirstQuestion(4)" /> 极重（8 小时以上），或几乎无时无刻都有 </label>
+      <button type="submit" class="submit-button" onclick="calculateScore()">提交问卷</button>
     </div>
-    <div class="question content-item" id="question2">
-      <p>2、强迫思维对学业、工作、社交或日常活动任意一项的妨碍（请考虑因为
-        强迫思维而不去做或减少做的事情）</p>
-      <label> <input type="radio" name="q2" value="0" required /> 不受妨碍 </label>
-      <label> <input type="radio" name="q2" value="1" /> 轻微（稍微妨碍，但整体表现并无大碍） </label>
-      <label> <input type="radio" name="q2" value="2" /> 中度（确实妨碍，但仍可应付） </label>
-      <label> <input type="radio" name="q2" value="3" /> 重度（上述某一项或多项功能严重受损） </label>
-      <label> <input type="radio" name="q2" value="4" /> 极度（上述某一项或多项功能丧失） </label>
+    <!-- 模态弹窗 -->
+    <div id="scoreModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <p id="scoreText"></p>
+      </div>
     </div>
-    <div class="question content-item" id="question3">
-      <p>3、强迫思维带来的苦恼或困扰</p>
-      <label> <input type="radio" name="q3" value="0" required /> 没有 </label>
-      <label> <input type="radio" name="q3" value="1" /> 轻微 </label>
-      <label> <input type="radio" name="q3" value="2" /> 中度（尚可应付） </label>
-      <label> <input type="radio" name="q3" value="3" /> 重度 </label>
-      <label> <input type="radio" name="q3" value="4" /> 极重（持续地感觉如同废人） </label>
-    </div>
-    <div class="question content-item" id="question4">
-      <p>4、与强迫思维的抗衡</p>
-      <label> <input type="radio" name="q4" value="0" required /> 无需抗衡 </label>
-      <label> <input type="radio" name="q4" value="1" /> 基本能与之抗衡 </label>
-      <label> <input type="radio" name="q4" value="2" /> 有时能与之抗衡 </label>
-      <label> <input type="radio" name="q4" value="3" /> 经常屈服 </label>
-      <label> <input type="radio" name="q4" value="4" /> 完全屈服 </label>
-    </div>
-    <div class="question content-item" id="question5">
-      <p>5、对强迫思维的掌控</p>
-      <label> <input type="radio" name="q5" value="0" required /> 完全能控制 </label>
-      <label> <input type="radio" name="q5" value="1" /> 大多能控制 </label>
-      <label> <input type="radio" name="q5" value="2" /> 中等程度控制 </label>
-      <label> <input type="radio" name="q5" value="3" /> 很少能控制 </label>
-      <label> <input type="radio" name="q5" value="4" /> 完全无法控制 </label>
-    </div>
+
     <script>
-      function handleFirstQuestion(value) {
-        const questionsToHide = document.querySelectorAll('#question2, #question3, #question4, #question5');
-        if (value === 0) {
-          questionsToHide.forEach(question => question.style.display = 'none');
-        } else {
-          questionsToHide.forEach(question => question.style.display = '');
+      function calculateScore() {
+        const questions1to5 = document.querySelectorAll('.question:nth-child(-n+5)')
+        let score1to5 = 0
+        questions1to5.forEach((question) => {
+          const selectedOption = question.querySelector('input[type="radio"]:checked')
+          if (selectedOption) {
+            const value = parseInt(selectedOption.value)
+            if (!isNaN(value)) {
+              score1to5 += value // 将选中选项的值加到总分上
+            }
+          }
+        })
+
+        const questions6to10 = document.querySelectorAll('.question:nth-child(n+6)')
+        let score6to10 = 0
+        questions6to10.forEach((question) => {
+          const selectedOption = question.querySelector('input[type="radio"]:checked')
+          if (selectedOption) {
+            const value = parseInt(selectedOption.value)
+            if (!isNaN(value)) {
+              score6to10 += value // 将选中选项的值加到总分上
+            }
+          }
+        })
+        // 显示模态弹窗和得分
+        document.getElementById('scoreText').innerText = `强迫思维：${score1to5}\n强迫行为：${score6to10}\n总分：${score1to5 + score6to10}
+        轻度——两项总分 6－15 分（或者其中一项分数为 0，另一项 6-9 分）
+        处于轻度严重的强迫症患者，其症状已经对患者的生活、学习或职业开始造成一定的影响，患者的症状会随着环境和情绪的变化不断的波动，如果不能尽早的解决，很容易会朝着严重的程度发展、泛化，此时是治疗效果最理想的时期，建议尽早治疗。
+        中度——两项总分 16－25 分（或者其中一项分数为，另一项 10-14 分）这属于中等的强迫症状，表示症状的频率或严重程度已经对生活、学习或职业造成明显的障碍，导致患者可能无法有效执行其原有的角色功能，甚至在没有出现有效的改善前，可能导致抑郁症状，甚至出现自杀念头，必须接受心理治疗或者药物治疗。
+        重度——两项总分 25 分以上（或者其中一项分数为，另一项 15 分以上）此时，患者的强迫症状已经非常严重，完全无法执行原有的角色功能，甚至连衣食住行等生活功能都无法进行。通常患者已经无法出门，将自己禁锢家中，无时无刻都有强迫思考，无时无刻都在执行强迫行为。重度严重的患者极易出现抑郁症状，通常需要强制治疗`
+        document.getElementById('scoreModal').style.display = 'block'
+      }
+      
+      // 关闭模态弹窗
+      const closeButton = document.querySelector('.close-button')
+      closeButton.addEventListener('click', function () {
+        document.getElementById('scoreModal').style.display = 'none'
+      })
+      
+      // 点击模态弹窗外部也可以关闭弹窗
+      window.onclick = function (event) {
+        const modal = document.getElementById('scoreModal')
+        if (event.target == modal) {
+          modal.style.display = 'none'
         }
       }
     </script>
-    <div class="question">
-      <p>6、在与他人沟通时，我会维护他们的自尊和对自我价值的认同</p>
-      <label> <input type="radio" name="q6" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q6" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q6" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q6" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q6" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>7、我能够忘却别人带给我的伤痛。</p>
-      <label> <input type="radio" name="q7" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q7" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q7" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q7" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q7" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>8、当别人提出要我帮忙时，我会尽我所能的帮助他们</p>
-      <label> <input type="radio" name="q8" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q8" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q8" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q8" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q8" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>9、我从未想过要报复曾经伤害过我的人。</p>
-      <label> <input type="radio" name="q9" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q9" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q9" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q9" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q9" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>10、ta 并不一定是可以让人信赖的人，我能想起 ta 有好几次不可信赖的行为</p>
-      <label> <input type="radio" name="q10" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q10" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q10" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q10" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q10" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>11、我相信每个问题都有两面观点，所以我常试着从不同的观点来看问题</p>
-      <label> <input type="radio" name="q11" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q11" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q11" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q11" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q11" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>12、尽管十分赞同自己的观点，我仍然表现的很灵活，愿意接受其他信息</p>
-      <label> <input type="radio" name="q12" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q12" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q12" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q12" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q12" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>13、我从不认为无法预测的冲突和严重的紧张会损害我们之间的关系，因为我们的关系能经受任何暴风骤雨的考验</p>
-      <label> <input type="radio" name="q13" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q13" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q13" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q13" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q13" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>14、面临未知的新环境时我感到十分安全，因为我知道同伴是绝不会让我吃亏的</p>
-      <label> <input type="radio" name="q14" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q14" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q14" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q14" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q14" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>15、在批评别人前，我会试着想象：假如我处在他的情况，我的感受如何?</p>
-      <label> <input type="radio" name="q15" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q15" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q15" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q15" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q15" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>16、为了更好地理解别人的观点而向他们提问时，我会问“是什么”，而不是“为什么”</p>
-      <label> <input type="radio" name="q16" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q16" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q16" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q16" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q16" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>17、当我对一个人生气时，我通常会试着去想一下他的立场</p>
-      <label> <input type="radio" name="q17" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q17" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q17" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q17" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q17" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>18、即使不赞同别人的观点，我也会对其表现出浓厚的兴趣</p>
-      <label> <input type="radio" name="q18" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q18" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q18" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q18" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q18" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>19、我对那些曾经伤害过我的人始终心怀怨恨。</p>
-      <label> <input type="radio" name="q19" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q19" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q19" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q19" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q19" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>20、对那些权力比我小、掌握信息比我少的人，我不会用高人一等的口气同他们讲话</p>
-      <label> <input type="radio" name="q20" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q20" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q20" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q20" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q20" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>21、我倾向于帮助那些需要帮助的人而不留名</p>
-      <label> <input type="radio" name="q21" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q21" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q21" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q21" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q21" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>22、每个人都是可以理解的</p>
-      <label> <input type="radio" name="q22" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q22" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q22" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q22" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q22" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>23、我最终会原谅那些曾经伤害过我的人。</p>
-      <label> <input type="radio" name="q23" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q23" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q23" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q23" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q23" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>24、ta 是个十分诚实的人，即使 ta 说出令人无法相信的话别人也会相信 ta 说的是事实</p>
-      <label> <input type="radio" name="q24" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q24" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q24" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q24" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q24" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>25、大多数情况下，我帮助别人不留名</p>
-      <label> <input type="radio" name="q25" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q25" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q25" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q25" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q25" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>26、ta 已被证明是一个可以信赖的人，无论 ta 与谁结婚也绝不会做出不忠的事</p>
-      <label> <input type="radio" name="q26" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q26" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q26" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q26" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q26" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>27、我不会对那些曾经伤害过我的人心存偏见。</p>
-      <label> <input type="radio" name="q27" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q27" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q27" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q27" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q27" value="5" /> 完全认同 </label>
-    </div>
-
-    <div class="question">
-      <p>28、有时候我想象从我的朋友的观点来看事情的样子，以便更了解他们</p>
-      <label> <input type="radio" name="q28" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q28" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q28" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q28" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q28" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>29、在做决定前，我试着从争论中去看每个人的立场</p>
-      <label> <input type="radio" name="q29" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q29" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q29" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q29" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q29" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>30、我更愿意在匿名的情况下捐款</p>
-      <label> <input type="radio" name="q30" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q30" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q30" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q30" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q30" value="5" /> 完全认同 </label>
-    </div>
-    <div class="question">
-      <p>31、我不会去憎恶那些伤害过我的人。</p>
-      <label> <input type="radio" name="q31" value="1" required /> 完全不认同 </label>
-      <label> <input type="radio" name="q31" value="2" /> 不认同 </label>
-      <label> <input type="radio" name="q31" value="3" /> 不置可否 </label>
-      <label> <input type="radio" name="q31" value="4" /> 认同 </label>
-      <label> <input type="radio" name="q31" value="5" /> 完全认同 </label>
-    </div>
-    <button type="submit" class="submit-button" onclick="calculateScore()">
-      提交问卷
-    </button>
-  </div>
-  <!-- 模态弹窗 -->
-  <div id="scoreModal" class="modal" style="display: none">
-    <div class="modal-content">
-      <span class="close-button">&times;</span>
-      <p id="scoreText"></p>
-    </div>
-  </div>
-
-  <script>
-    function calculateScore() {
-      const questions = document.querySelectorAll(".question");
-      let score = 0;
-      questions.forEach((question) => {
-        const selectedOption = question.querySelector(
-          'input[type="radio"]:checked'
-        );
-        if (selectedOption) {
-          const value = parseInt(selectedOption.value);
-          if (!isNaN(value)) {
-            score += value; // 将选中选项的值加到总分上
-          }
-        }
-      });
-      score = Math.round(score * 1.25); // 乘以 1.25 取整数
-      // 显示模态弹窗和得分
-      document.getElementById("scoreText").innerText = `您的得分是：${score}
-      问卷结构分为：共情（ E），利他（ P），信任（ T）三个因素。共情维度还包
-含 3 个子维度，观点采择（ E1）、困难共情（ E2）、开放认同（ E3）；利他维度包
-含 2 个子维度，人际宽恕（P1）、无私奉献（P2）；信任维度包括 2 个子维度依恋
-（ T1）信赖（ T2）。各子维度取平均分，将子维度的分数求和为各维度总分，各
-维度总分为恋爱能力总分。并且最终将 3 个维度的平均分相加，获得恋爱能力的
-总分。`;
-      document.getElementById("scoreModal").style.display = "block";
-    }
-
-    // 关闭模态弹窗
-    const closeButton = document.querySelector(".close-button");
-    closeButton.addEventListener("click", function () {
-      document.getElementById("scoreModal").style.display = "none";
-    });
-
-    // 点击模态弹窗外部也可以关闭弹窗
-    window.onclick = function (event) {
-      const modal = document.getElementById("scoreModal");
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    };
-  </script>
-</body>
-
+  </body>
 </html>

@@ -1,0 +1,47 @@
+<div class="survey-container" style="width: 100%; margin: 0 auto; padding: 30px; background-color: #fff; box-shadow: 0 3px 9px rgba(0,0,0,0.1); user-select: none;">
+    <h2 style="text-align: center; color: #333; font-size: 84px;">调查问卷</h2>
+    <form method="post" action="{% url 'submit_survey' %}" style="margin-top: 30px;">
+        {% csrf_token %}
+        <div class="question" style="margin-bottom: 30px;">
+            <p style="font-size: 66px; color: #333;">1. 您的性别是？</p>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="radio" name="gender" value="male" required style="width: 66px; height: 66px; vertical-align: middle;"> 男</label>
+            <label style="font-size: 66px;"><input type="radio" name="gender" value="female" style="width: 66px; height: 66px; vertical-align: middle;"> 女</label>
+        </div>
+        <div class="question" style="margin-bottom: 30px;">
+            <p style="font-size: 66px; color: #333;">2. 您的年龄范围是？</p>
+            <select name="age" required style="padding: 15px; border-radius: 15px; border: 3px solid #ccc; font-size: 66px;">
+                <option value="">请选择</option>
+                <option value="18-25">18-25岁</option>
+                <option value="26-35">26-35岁</option>
+                <option value="36-45">36-45岁</option>
+                <option value="46-55">46-55岁</option>
+                <option value="56以上">56岁以上</option>
+            </select>
+        </div>
+        <div class="question" style="margin-bottom: 30px;">
+            <p style="font-size: 66px; color: #333;">2.1 您的具体年龄是？</p>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="radio" name="exact_age" value="18-25" required style="width: 66px; height: 66px; vertical-align: middle;"> 18-25岁</label>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="radio" name="exact_age" value="26-35" style="width: 66px; height: 66px; vertical-align: middle;"> 26-35岁</label>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="radio" name="exact_age" value="36-45" style="width: 66px; height: 66px; vertical-align: middle;"> 36-45岁</label>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="radio" name="exact_age" value="46-55" style="width: 66px; height: 66px; vertical-align: middle;"> 46-55岁</label>
+            <label style="font-size: 66px;"><input type="radio" name="exact_age" value="56以上" style="width: 66px; height: 66px; vertical-align: middle;"> 56岁以上</label>
+        </div>
+        <div class="question" style="margin-bottom: 30px;">
+            <p style="font-size: 66px; color: #333;">3. 您通常使用什么方式上网？（可多选）</p>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="checkbox" name="internet_usage[]" value="mobile" style="width: 66px; height: 66px; vertical-align: middle;"> 手机</label>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="checkbox" name="internet_usage[]" value="desktop" style="width: 66px; height: 66px; vertical-align: middle;"> 桌面电脑</label>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="checkbox" name="internet_usage[]" value="laptop" style="width: 66px; height: 66px; vertical-align: middle;"> 笔记本电脑</label>
+            <label style="font-size: 66px;"><input type="checkbox" name="internet_usage[]" value="tablet" style="width: 66px; height: 66px; vertical-align: middle;"> 平板电脑</label>
+        </div>
+        <div class="question" style="margin-bottom: 30px;">
+            <p style="font-size: 66px; color: #333;">4. 您认为产品X的用户体验如何？</p>
+            <textarea name="product_experience" rows="12" required style="width: 100%; padding: 30px; border-radius: 15px; border: 3px solid #ccc; font-size: 66px;"></textarea>
+        </div>
+        <div class="question" style="margin-bottom: 30px;">
+            <p style="font-size: 66px; color: #333;">5. 产品X的价格是否合理？</p>
+            <label style="margin-right: 15px; font-size: 66px;"><input type="radio" name="price" value="yes" required style="width: 66px; height: 66px; vertical-align: middle;"> 是</label>
+            <label style="font-size: 66px;"><input type="radio" name="price" value="no" style="width: 66px; height: 66px; vertical-align: middle;"> 否</label>
+        </div>
+        <button type="submit" style="padding: 30px 60px; background-color: #007bff; color: #fff; border: none; border-radius: 15px; cursor: pointer; font-size: 66px;">提交问卷</button>
+    </form>
+</div>

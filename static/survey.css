@@ -84,3 +84,18 @@
   padding: 10px;
   margin: 10px 0;
 }
+
+.description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+.content-item {
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: #fff;
+  padding: 20px; /* 增大内边距 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 加重阴影 */
+  cursor: pointer; /* 新增样式，使其可点击 */
+  border-radius: 10px; /* 圆角效果 */
+}

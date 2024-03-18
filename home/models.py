@@ -2,6 +2,80 @@ from django.db import models
 from django.conf import settings
 
 
+class Questionnaire(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    result = models.TextField()
+
+    def __str__(self):
+        return self.title
+
+
+class Question(models.Model):
+    questionnaire = models.ForeignKey(Questionnaire, on_delete=models.CASCADE)
+    text = models.CharField(max_length=255)
+    option1 = models.ForeignKey(
+        "Option",
+        on_delete=models.CASCADE,
+        related_name="option1",
+        null=True,
+        blank=True,
+    )
+    option2 = models.ForeignKey(
+        "Option",
+        on_delete=models.CASCADE,
+        related_name="option2",
+        null=True,
+        blank=True,
+    )
+    option3 = models.ForeignKey(
+        "Option",
+        on_delete=models.CASCADE,
+        related_name="option3",
+        null=True,
+        blank=True,
+    )
+    option4 = models.ForeignKey(
+        "Option",
+        on_delete=models.CASCADE,
+        related_name="option4",
+        null=True,
+        blank=True,
+    )
+    option5 = models.ForeignKey(
+        "Option",
+        on_delete=models.CASCADE,
+        related_name="option5",
+        null=True,
+        blank=True,
+    )
+    option6 = models.ForeignKey(
+        "Option",
+        on_delete=models.CASCADE,
+        related_name="option6",
+        null=True,
+        blank=True,
+    )
+    option7 = models.ForeignKey(
+        "Option",
+        on_delete=models.CASCADE,
+        related_name="option7",
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.text
+
+
+class Option(models.Model):
+    text = models.CharField(max_length=255)
+    value = models.IntegerField()
+
+    def __str__(self):
+        return self.text + "(" + str(self.value) + ")"
+
+
 # from django.db import models
 class category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -21,8 +95,6 @@ class subcategory(models.Model):
 
     def __str__(self):
         return f"{self.category.name} - {self.name}"
-
-from django.db import models
 
 
 class music(models.Model):
@@ -104,7 +176,7 @@ BACKGROUND_CHOICES = [
 
 class diary(models.Model):
     title = models.CharField(max_length=100)
-    content = models.TextField(blank=True,null=True)
+    content = models.TextField(blank=True, null=True)
     weather = models.CharField(
         max_length=20, choices=WEATHER_CHOICES, blank=True, null=True
     )
