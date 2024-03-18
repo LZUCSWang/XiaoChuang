@@ -23,7 +23,6 @@
     <script>
       document.addEventListener('DOMContentLoaded', async () => {
           pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.worker.min.js';
-          {% comment %} const url = '/static/chenying.pdf'; // 指定PDF文件路径 {% endcomment %}
           const url = "{{ file|safe }}"; // 指定PDF文件路径
           console.log(url);
           try {
